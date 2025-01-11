@@ -26,14 +26,35 @@ void set_scale(s21_decimal *value, int scale) {
 }
 
 // хз че делает двойное отрицание если честно)
-int getBit(s21_decimal value, int bit) {
+int get_bit(s21_decimal value, int bit) {
   return !!(value.bits[bit / 32] & (1u << (bit % 32)));
 }
 
 void set_bit(s21_decimal* value, int position, int sum){
     if(position / 32 < 4 && sum){
-        value->bits[position / 4] |= (1u << (position % 32));
-    } else if(position / 32 < 4 && sum){
-        value->bits[position / 4] &= ~(1u << (position % 32));
+        value->bits[position / 32] |= (1u << (position % 32));
+    } else if(position / 32 < 4 && !sum){
+        value->bits[position / 32] &= ~(1u << (position % 32));
     }
+}
+
+void multiply_by_10(s21_decimal *value) {
+    s21_decimal temp = *value;
+    s21_decimal result = {{0}};
+    s21_decimal ten = {{10, 0, 0, 0}};
+    s21_mul(temp,ten,&result);
+    *value = result;
+}
+
+void align_scales(int scale_first, int scale_second,s21_decimal *aligned_first, s21_decimal *aligned_second){
+    while (scale_first < scale_second) {
+        multiply_by_10(aligned_first);
+        scale_first++;
+    }
+
+    while (scale_second < scale_first) {
+        multiply_by_10(aligned_second);
+        scale_second++;
+    }
+    
 }

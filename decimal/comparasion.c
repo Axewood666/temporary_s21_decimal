@@ -22,13 +22,7 @@ int s21_is_not_equal(s21_decimal first, s21_decimal second){
 }
 
 
-void multiply_by_10(s21_decimal *value) {
-    s21_decimal temp = *value;
-    s21_decimal result = {{0}};
-    s21_decimal ten = {{10, 0, 0, 0}};
-    s21_mul(temp,ten,&result);
-    *value = result;
-}
+
 
 
 int s21_is_greater(s21_decimal first, s21_decimal second){
@@ -46,15 +40,16 @@ int s21_is_greater(s21_decimal first, s21_decimal second){
     s21_decimal aligned_first = first;
     s21_decimal aligned_second = second;
     // восстановить как будет умножение!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    while (scale_first < scale_second) {
-        multiply_by_10(&aligned_first);
-        scale_first++;
-    }
+    // while (scale_first < scale_second) {
+    //     multiply_by_10(&aligned_first);
+    //     scale_first++;
+    // }
 
-    while (scale_second < scale_first) {
-        multiply_by_10(&aligned_second);
-        scale_second++;
-    }
+    // while (scale_second < scale_first) {
+    //     multiply_by_10(&aligned_second);
+    //     scale_second++;
+    // }
+    align_scales(scale_first,scale_second,&aligned_first,&aligned_second);
     int flag_break = 0;
     for (int i = 2; i >= 0 && !flag_break; i--) { 
         if (aligned_first.bits[i] > aligned_second.bits[i]) {
