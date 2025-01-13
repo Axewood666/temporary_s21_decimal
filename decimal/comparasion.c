@@ -21,10 +21,6 @@ int s21_is_not_equal(s21_decimal first, s21_decimal second){
     return !s21_is_equal(first,second);
 }
 
-
-
-
-
 int s21_is_greater(s21_decimal first, s21_decimal second){
     int result = FALSE;
     int sign_first = first.bits[3] & SIGN_MASK;
@@ -32,23 +28,10 @@ int s21_is_greater(s21_decimal first, s21_decimal second){
     if (sign_first != sign_b) {
         result = sign_b != 0; 
     }
-
-    
    int scale_first = (first.bits[3] & SCALE_MASK) >> 16;
    int scale_second = (second.bits[3] & SCALE_MASK) >> 16;
-
     s21_decimal aligned_first = first;
     s21_decimal aligned_second = second;
-    // восстановить как будет умножение!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // while (scale_first < scale_second) {
-    //     multiply_by_10(&aligned_first);
-    //     scale_first++;
-    // }
-
-    // while (scale_second < scale_first) {
-    //     multiply_by_10(&aligned_second);
-    //     scale_second++;
-    // }
     align_scales(scale_first,scale_second,&aligned_first,&aligned_second);
     int flag_break = 0;
     for (int i = 2; i >= 0 && !flag_break; i--) { 
@@ -71,23 +54,11 @@ int s21_is_less(s21_decimal first, s21_decimal second){
     if (sign_first != sign_b) {
         result = sign_b != 0; 
     }
-
-    
    int scale_first = (first.bits[3] & SCALE_MASK) >> 16;
    int scale_second = (second.bits[3] & SCALE_MASK) >> 16;
-
     s21_decimal aligned_first = first;
     s21_decimal aligned_second = second;
-    // восстановить как будет умножение!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    while (scale_first < scale_second) {
-        multiply_by_10(&aligned_first);
-        scale_first++;
-    }
-
-    while (scale_second < scale_first) {
-        multiply_by_10(&aligned_second);
-        scale_second++;
-    }
+    align_scales(scale_first,scale_second,&aligned_first,&aligned_second);
     int flag_break = 0;
     for (int i = 2; i >= 0 && !flag_break; i--) { 
         if (aligned_first.bits[i] < aligned_second.bits[i]) {
