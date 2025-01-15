@@ -70,7 +70,23 @@ void invert(s21_decimal *value) {
   set_bit(value, 97, 1);
 }
 
-// void anti_invert(s21_decimal *value) {
-//   s21_decimal result = {{0, 0, 0, 0}};
-//   s21_decimal sub_one = {{1, 0, 0, 0}};
-// }
+int get_lastbit(s21_decimal value) { return get_bit(value, 0); }
+
+void shift_right(s21_decimal *value) {
+  // тут храниться последние биты 1 и 2 bits
+  int last_bits[2] = {get_bit(*value, 32), get_bit(*value, 64)};
+  for (int i = 2; i >= 0; i++) {
+    value->bits[i] = value->bits[i] >> 1;
+  }
+  set_bit(value, 63, last_bits[1]);
+  set_bit(value, 31, last_bits[0]);
+}
+void shift_left(s21_decimal *value) {
+  // тут храниться последние биты 1 и 2 bits
+  int last_bits[2] = {get_bit(*value, 31), get_bit(*value, 63)};
+  for (int i = 2; i >= 0; i++) {
+    value->bits[i] = value->bits[i] << 1;
+  }
+  set_bit(value, 64, last_bits[1]);
+  set_bit(value, 32, last_bits[0]);
+}
