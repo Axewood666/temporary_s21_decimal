@@ -58,3 +58,17 @@ void align_scales(int scale_first, int scale_second,s21_decimal *aligned_first, 
     }
     
 }
+
+
+void invert(s21_decimal *value){
+    s21_decimal result = {{0,0,0,0}};
+    s21_decimal add_one = {{1,0,0,0}};
+    for(int i = 0;i<3;i++){
+        value->bits[i] = ~value->bits[i];
+        
+    }
+    s21_add(*value,add_one,&result);
+    for(int i = 0;i<3;i++){
+        value->bits[i] = result.bits[i];
+    }
+}
