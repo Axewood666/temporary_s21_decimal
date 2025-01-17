@@ -1,4 +1,4 @@
-#include "main.h"
+#include "s21_decimal.h"
 
 int main() {
   s21_decimal a = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};

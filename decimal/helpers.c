@@ -1,4 +1,4 @@
-#include "main.h"
+#include "s21_decimal.h"
 
 // Вспомогательная функция для извлечения знака
 int get_sign(s21_decimal value) { return (value.bits[3] & SIGN_MASK) != 0; }
@@ -17,7 +17,7 @@ void set_sign(s21_decimal *value, int sign) {
 
 // Установить масштаб результата
 void set_scale(s21_decimal *value, int scale) {
-  value->bits[3] &= ~SCALE_MASK;    // Очистить текущий масштаб
+  value->bits[3] &= ~SCALE_MASK;  // Очистить текущий масштаб
   value->bits[3] |= (scale << 16);  // Установить новый масштаб
 }
 

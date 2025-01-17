@@ -6,6 +6,7 @@ test_dir=tests
 sprintf_dir=.
 csharp_dir=.
 
+lib_name=s21_decimal.a
 SRCS := $(temp_dir)/add.c $(temp_dir)/anothermul.c \
 	$(sprintf_dir)/comparasion.c  $(csharp_dir)/helpers.c \
 	$(csharp_dir)/main.c $(csharp_dir)/mul.c
@@ -13,8 +14,8 @@ OBJS := $(SRCS:.c=.o)
 GCOV_OBJS := $(SRCS:.c=_gcov.o)
 DEBUG_OBJS := $(SRCS:.c=_debug.o)
 
-test_files=$(test_dir)/arithmetic_tests.c
-# $(test_dir)/comparasion_tests.c $(test_dir)/conversion_tests.c $(test_dir)/other_funcs_tests.c 
+test_files=$(test_dir)/arithmetic_tests.c $(test_dir)/comparison_tests.c \
+	$(test_dir)/conversion_tests.c $(test_dir)/other_funcs_tests.c 
 TEST_OBJS := $(test_files:.c=.o)
 files_for_report=*.gcno *.gcda */*.gcno */*.gcda test_with_gcov s21_string_gcov.a
 
@@ -42,24 +43,24 @@ clean:
 #------------
 
 #lib
-s21_string.a: $(OBJS)
-	ar rc s21_string.a $(OBJS)
+$(lib_name): $(OBJS)
+	ar rc $(lib_name) $(OBJS)
 	rm -f $(OBJS)
 #------------
 
 #tests
-test: s21_string.a $(TEST_OBJS)
+test: $(lib_name) $(TEST_OBJS)
 	@echo "\n----------------Tests----------------"
-	@$(cc) $(flags) $(test_dir)/test_runner.c $(TEST_OBJS) s21_string.a $(check_flags) -o test
+	@$(cc) $(flags) $(test_dir)/test_runner.c $(TEST_OBJS) $(lib_name) $(check_flags) -o test
 	@./test
 	@rm test
 	@echo "-------------------------------------\n"
 #-------------
 
 #tests valgrind
-test_valgrind: s21_string.a $(TEST_OBJS)
+test_valgrind: $(lib_name) $(TEST_OBJS)
 	@echo "\n----------------Tests----------------"
-	@$(cc) $(flags) $(test_dir)/test_runner.c $(TEST_OBJS) s21_string.a $(check_flags) -o test
+	@$(cc) $(flags) $(test_dir)/test_runner.c $(TEST_OBJS) $(lib_name) $(check_flags) -o test
 	-@valgrind --tool=memcheck --leak-check=full ./test
 	@rm test
 	@echo "-------------------------------------\n"

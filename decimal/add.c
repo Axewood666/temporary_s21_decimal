@@ -1,11 +1,11 @@
-#include "main.h"
+#include "s21_decimal.h"
 // todo
 // aling
 // set_bit
 // max
 // mb minus no xz
 
-int add_bits(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
+int add_bits(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int carry = 0;  // перенос
   int flag = 0;
   for (int i = 0; i < 96; i++) {
@@ -21,7 +21,7 @@ int add_bits(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   return flag;
 }
 
-int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
+int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int status = 0;
   int sign_1 = get_sign(value_1);
   int sign_2 = get_sign(value_2);
@@ -42,7 +42,6 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
       set_sign(result, sign_1);
       set_scale(result, get_scale(value_1));
     }
-
   } else if (sign_1 == 0 && sign_2 == 1) {
     set_sign(&value_2, 0);
     status = s21_sub(value_1, value_2, result);
@@ -53,7 +52,7 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   return status;
 }
 
-int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
+int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int status = 0;
   int sign_1 = get_sign(value_1);
   int sign_2 = get_sign(value_2);

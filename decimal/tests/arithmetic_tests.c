@@ -1,4 +1,4 @@
-#include "../main.h"
+#include "../s21_decimal.h"
 #include <check.h>
 
 START_TEST(test_test)

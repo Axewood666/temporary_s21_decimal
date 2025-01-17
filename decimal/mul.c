@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "main.h"
+#include "s21_decimal.h"
 
 // Умножение длинных чисел
 int multiply_96bit(const unsigned int *a, const unsigned int *b,
@@ -27,7 +27,7 @@ int multiply_96bit(const unsigned int *a, const unsigned int *b,
     // Округляем результат
     rounding_part =
         (uint64_t)intermediate[2] >> 31;  // Берем бит для округления
-    intermediate[2] &= 0x7FFFFFFF;        // Обрезаем лишний бит
+    intermediate[2] &= 0x7FFFFFFF;  // Обрезаем лишний бит
     if (rounding_part && ++intermediate[2] == 0 && ++intermediate[1] == 0 &&
         ++intermediate[0] == 0) {
       res = -1;
