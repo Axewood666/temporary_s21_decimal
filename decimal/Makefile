@@ -2,7 +2,7 @@ cc=gcc
 flags=-Wall -Werror -Wextra -std=c11
 gcov_flags=--coverage
 temp_dir=.
-test_dir=.
+test_dir=tests
 sprintf_dir=.
 csharp_dir=.
 
@@ -13,7 +13,8 @@ OBJS := $(SRCS:.c=.o)
 GCOV_OBJS := $(SRCS:.c=_gcov.o)
 DEBUG_OBJS := $(SRCS:.c=_debug.o)
 
-test_files=$(test_dir)/test_string.c $(test_dir)/test_sprintf.c $(test_dir)/test_csharp.c
+test_files=$(test_dir)/arithmetic_tests.c
+# $(test_dir)/comparasion_tests.c $(test_dir)/conversion_tests.c $(test_dir)/other_funcs_tests.c 
 TEST_OBJS := $(test_files:.c=.o)
 files_for_report=*.gcno *.gcda */*.gcno */*.gcda test_with_gcov s21_string_gcov.a
 
