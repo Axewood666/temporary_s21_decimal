@@ -76,7 +76,7 @@ int get_lastbit(s21_decimal value) { return get_bit(value, 0); }
 void shift_right(s21_decimal *value) {
   // тут храниться последние биты 1 и 2 bits
   int last_bits[2] = {get_bit(*value, 32), get_bit(*value, 64)};
-  for (int i = 2; i >= 0; i++) {
+  for (int i = 2; i >= 0; i--) {
     value->bits[i] = value->bits[i] >> 1;
   }
   set_bit(value, 63, last_bits[1]);
@@ -85,9 +85,36 @@ void shift_right(s21_decimal *value) {
 void shift_left(s21_decimal *value) {
   // тут храниться последние биты 1 и 2 bits
   int last_bits[2] = {get_bit(*value, 31), get_bit(*value, 63)};
-  for (int i = 2; i >= 0; i++) {
+  for (int i = 2; i >= 0; i--) {
     value->bits[i] = value->bits[i] << 1;
   }
   set_bit(value, 64, last_bits[1]);
   set_bit(value, 32, last_bits[0]);
 }
+
+
+int find_first_one(s21_decimal *value){
+  int return_position = -1;
+  for(int position = 95;position>=0 && return_position<0;position--){
+    if(get_bit(*value,position)){
+      return_position = position;
+    }
+  }
+  return return_position;
+}
+
+
+void normalization_bit(s21_decimal *value,int second_pos,int first_pos){
+  for(int i = 0;i<first_pos-second_pos;i++){
+    shift_left(value);
+  }
+}
+
+void thrust(s21_decimal *value,int bit){
+  shift_left(value);
+  if(bit){
+    value->bits[0] |= 0x00000001;
+  }
+
+}
+
