@@ -9,7 +9,7 @@ csharp_dir=.
 lib_name=s21_decimal.a
 SRCS := $(temp_dir)/add.c $(temp_dir)/mul.c \
 	$(sprintf_dir)/comparasion.c  $(csharp_dir)/helpers.c \
-	$(csharp_dir)/main.c
+	$(csharp_dir)/main.c $(csharp_dir)/div.c
 OBJS := $(SRCS:.c=.o)
 GCOV_OBJS := $(SRCS:.c=_gcov.o)
 DEBUG_OBJS := $(SRCS:.c=_debug.o)
@@ -41,6 +41,7 @@ clean:
 	rm -f $(OBJS) $(TEST_OBJS) $(DEBUG_OBJS) *.a $(files_for_report) $(GCOV_OBJS) 
 	rm -rf report gcov_report
 	rm -f temp_debug
+	rm - f test
 #------------
 
 #lib
