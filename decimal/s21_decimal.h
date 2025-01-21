@@ -24,6 +24,9 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int anothers21_mul(s21_decimal value_1, s21_decimal value_2,
                    s21_decimal *result);
+int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+
+
 // помогающие функции
 int get_sign(s21_decimal value);
 int get_scale(s21_decimal value);
@@ -39,5 +42,7 @@ int get_lastbit(s21_decimal value);
 void shift_left(s21_decimal *value);
 void shift_right(s21_decimal *value);
 void invert(s21_decimal *value);
-
+void thrust(s21_decimal *value,int bit);
+void normalization_bit(s21_decimal *value,int second_pos,int first_pos);
+int find_first_one(s21_decimal *value);
 #endif
