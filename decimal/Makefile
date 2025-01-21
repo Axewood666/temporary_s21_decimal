@@ -38,7 +38,7 @@ all: $(OBJS)
 #all: test gcov_report
 
 clean:
-	rm -f $(OBJS) $(TEST_OBJS) *.a $(files_for_report) $(GCOV_OBJS)
+	rm -f $(OBJS) $(TEST_OBJS) $(DEBUG_OBJS) *.a $(files_for_report) $(GCOV_OBJS)
 	rm -rf report gcov_report
 #------------
 
@@ -83,9 +83,9 @@ gcov_report: gcov
 	rm -f $(files_for_report)
 
 lcov_report: gcov
-	lcov --rc branch_coverage=1 -d . -o s21_string_coverage.info -c
-	genhtml --branch-coverage s21_string_coverage.info --output-directory gcov_report
-	rm -f s21_string_coverage.info $(files_for_report)
+	lcov --rc branch_coverage=1 -d . -o s21_decimal_coverage.info -c
+	genhtml --branch-coverage s21_decimal_coverage.info --output-directory gcov_report
+	rm -f s21_decimal_coverage.info $(files_for_report)
 #---------------
 
 #for obj
@@ -103,7 +103,5 @@ $(test_dir)/%.o: $(test_dir)/%.c
 #--------------- 
 
 #for debug 
-debug: $(OBJS)
-	gcc $(OBJS) -o temp_debug
-
-
+debug: $(DEBUG_OBJS)
+	gcc $(DEBUG_OBJS) -o temp_debug
