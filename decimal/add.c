@@ -15,7 +15,7 @@ int add_bits(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     set_bit(result, i, sum % 2);
     carry = sum / 2;
     if (i == 95 && carry == 1 &&
-        !(get_bit(value_1, 97) || get_bit(value_2, 97)))
+        !(get_bit(value_1, 96) || get_bit(value_2, 96)))
       flag = 1;
   }
   return flag;
@@ -25,15 +25,19 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int status = 0;
   int sign_1 = get_sign(value_1);
   int sign_2 = get_sign(value_2);
+
+  s21_decimal inital_value_1 = value_1;
+  s21_decimal inital_value_2 = value_2;
   for (int i = 0; i < 4; i++) result->bits[i] = 0;
 
   if (sign_1 == sign_2) {
     align_scales(get_scale(value_1), get_scale(value_2), &value_1, &value_2);
     if (add_bits(value_1, value_2, result) == 1) {
-      if ((!get_scale(value_1) || !get_scale(value_2)) && !get_sign(value_1)) {
+      if ((!get_scale(inital_value_1) || !get_scale(inital_value_2)) &&
+          !get_sign(value_1)) {
         status = 1;
-      } else if (!(get_scale(value_1) || !get_scale(value_2) ||
-                   get_sign(value_1))) {
+      } else if ((!get_scale(value_1) || !get_scale(value_2)) &&
+                 get_sign(value_1)) {
         status = 2;
       } else if (get_scale(value_1) > 0 && get_scale(value_2) > 0) {
         // реализовать банковское округление

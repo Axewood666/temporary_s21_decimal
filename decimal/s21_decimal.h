@@ -19,11 +19,9 @@ int s21_is_greater(s21_decimal first, s21_decimal second);
 int s21_is_less(s21_decimal first, s21_decimal second);
 int s21_is_less_or_equal(s21_decimal first, s21_decimal second);
 int s21_is_greater_or_equal(s21_decimal first, s21_decimal second);
-int s21_mul(s21_decimal a, s21_decimal b, s21_decimal *result);
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
-int anothers21_mul(s21_decimal value_1, s21_decimal value_2,
-                   s21_decimal *result);
+int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 // помогающие функции
 int get_sign(s21_decimal value);
 int get_scale(s21_decimal value);

@@ -17,7 +17,7 @@ void set_sign(s21_decimal *value, int sign) {
 
 // Установить масштаб результата
 void set_scale(s21_decimal *value, int scale) {
-  value->bits[3] &= ~SCALE_MASK;  // Очистить текущий масштаб
+  value->bits[3] &= ~SCALE_MASK;    // Очистить текущий масштаб
   value->bits[3] |= (scale << 16);  // Установить новый масштаб
 }
 
@@ -60,6 +60,7 @@ void align_scales(int scale_first, int scale_second, s21_decimal *aligned_first,
 void invert(s21_decimal *value) {
   s21_decimal result = {{0, 0, 0, 0}};
   s21_decimal add_one = {{1, 0, 0, 0}};
+  set_scale(&add_one, get_scale(*value));
   for (int i = 0; i < 3; i++) {
     value->bits[i] = ~value->bits[i];
   }
@@ -67,7 +68,7 @@ void invert(s21_decimal *value) {
   for (int i = 0; i < 3; i++) {
     value->bits[i] = result.bits[i];
   }
-  set_bit(value, 97, 1);
+  set_bit(value, 96, 1);
 }
 
 int get_lastbit(s21_decimal value) { return get_bit(value, 0); }
