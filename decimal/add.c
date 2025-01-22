@@ -46,10 +46,10 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
       set_sign(result, sign_1);
       set_scale(result, get_scale(value_1));
     }
-  } else if (sign_1 == 0 && sign_2 == 1) {
+  } else if (sign_1 == 0) {
     set_sign(&value_2, 0);
     status = s21_sub(value_1, value_2, result);
-  } else if (sign_1 == 1 && sign_2 == 0) {
+  } else if (sign_1 == 1) {
     set_sign(&value_1, 0);
     status = s21_sub(value_1, value_2, result);
   }

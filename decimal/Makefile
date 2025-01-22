@@ -41,7 +41,7 @@ clean:
 	rm -f $(OBJS) $(TEST_OBJS) $(DEBUG_OBJS) *.a $(files_for_report) $(GCOV_OBJS) 
 	rm -rf report gcov_report
 	rm -f temp_debug
-	rm - f test
+	rm -f test
 #------------
 
 #lib
