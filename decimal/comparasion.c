@@ -34,7 +34,7 @@ int s21_is_greater(s21_decimal first, s21_decimal second) {
   s21_decimal aligned_second = second;
   align_scales(scale_first, scale_second, &aligned_first, &aligned_second);
   int flag_break = 0;
-  for (int i = 2; i >= 0 && !flag_break; i--) {
+  for (int i = 2; !flag_break && i >= 0; i--) {
     if (aligned_first.bits[i] > aligned_second.bits[i]) {
       result = sign_first == 0;
       flag_break++;
@@ -60,7 +60,7 @@ int s21_is_less(s21_decimal first, s21_decimal second) {
   s21_decimal aligned_second = second;
   align_scales(scale_first, scale_second, &aligned_first, &aligned_second);
   int flag_break = 0;
-  for (int i = 2; i >= 0 && !flag_break; i--) {
+  for (int i = 2; !flag_break && i >= 0; i--) {
     if (aligned_first.bits[i] < aligned_second.bits[i]) {
       result = sign_first == 0;
       flag_break++;
@@ -74,9 +74,9 @@ int s21_is_less(s21_decimal first, s21_decimal second) {
 }
 
 int s21_is_less_or_equal(s21_decimal first, s21_decimal second) {
-  return !s21_is_greater(first, second);
+  return s21_is_less(first, second) | s21_is_equal(first, second);
 }
 
 int s21_is_greater_or_equal(s21_decimal first, s21_decimal second) {
-  return !s21_is_less(first, second);
+  return s21_is_greater(first, second) | s21_is_equal(first, second);
 }

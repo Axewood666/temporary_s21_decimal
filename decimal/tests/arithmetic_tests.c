@@ -113,17 +113,9 @@ START_TEST(add_too_large_second_max) {
 }
 END_TEST
 
-START_TEST(add_too_small_int) {
+START_TEST(add_zero_scale_negative_first_value) {
   s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
-  s21_decimal num2 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
-  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
-  ck_assert_int_eq(s21_add(num1, num2, &res), 2);
-}
-END_TEST
-
-START_TEST(add_too_small_not_int) {
-  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80100000}};
-  s21_decimal num2 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
+  s21_decimal num2 = {{0x00000001, 0x00000000, 0x00000000, 0x80000000}};
   s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
   ck_assert_int_eq(s21_add(num1, num2, &res), 2);
 }
@@ -315,6 +307,30 @@ START_TEST(mul_not_int_first_negative_second_positive) {
 }
 END_TEST
 
+START_TEST(mul_too_large) {
+  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}};
+  s21_decimal num2 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_mul(num1, num2, &res), 1);
+}
+END_TEST
+
+START_TEST(mul_too_small) {
+  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
+  s21_decimal num2 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_mul(num1, num2, &res), 1);
+}
+END_TEST
+
+START_TEST(mul_too_large_scale) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x001C0000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_mul(num1, num2, &res), 1);
+}
+END_TEST
+
 Suite *test_arithmetic(void) {
   Suite *s = suite_create("Arithmetic test");
   TCase *tc = tcase_create("Tests");
@@ -330,8 +346,7 @@ Suite *test_arithmetic(void) {
   tcase_add_test(tc, add_too_large_both_max);
   tcase_add_test(tc, add_too_large_first_max);
   tcase_add_test(tc, add_too_large_second_max);
-  tcase_add_test(tc, add_too_small_int);
-  // tcase_add_test(tc, add_too_small_not_int);
+  tcase_add_test(tc, add_zero_scale_negative_first_value);
 
   tcase_add_test(tc, sub_int_both_positive);
   tcase_add_test(tc, sub_int_both_negative);
@@ -353,6 +368,8 @@ Suite *test_arithmetic(void) {
   tcase_add_test(tc, mul_not_int_both_negative);
   tcase_add_test(tc, mul_not_int_first_positive_second_negative);
   tcase_add_test(tc, mul_not_int_first_negative_second_positive);
+  tcase_add_test(tc, mul_too_large);
+  tcase_add_test(tc, mul_too_small);
 
   suite_add_tcase(s, tc);
   return s;

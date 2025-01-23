@@ -92,29 +92,25 @@ void shift_left(s21_decimal *value) {
   set_bit(value, 32, last_bits[0]);
 }
 
-
-int find_first_one(s21_decimal *value){
+int find_first_one(s21_decimal *value) {
   int return_position = -1;
-  for(int position = 95;position>=0 && return_position<0;position--){
-    if(get_bit(*value,position)){
+  for (int position = 95; position >= 0 && return_position < 0; position--) {
+    if (get_bit(*value, position)) {
       return_position = position;
     }
   }
   return return_position;
 }
 
-
-void normalization_bit(s21_decimal *value,int second_pos,int first_pos){
-  for(int i = 0;i<first_pos-second_pos;i++){
+void normalization_bit(s21_decimal *value, int second_pos, int first_pos) {
+  for (int i = 0; i < first_pos - second_pos; i++) {
     shift_left(value);
   }
 }
 
-void thrust(s21_decimal *value,int bit){
+void thrust(s21_decimal *value, int bit) {
   shift_left(value);
-  if(bit){
+  if (bit) {
     value->bits[0] |= 0x00000001;
   }
-
 }
-
