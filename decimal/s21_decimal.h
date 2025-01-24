@@ -40,6 +40,7 @@ void shift_left(s21_decimal *value);
 void shift_right(s21_decimal *value);
 void invert(s21_decimal *value);
 void thrust(s21_decimal *value, int bit);
-void normalization_bit(s21_decimal *value, int second_pos, int first_pos);
+int normalization_bit(s21_decimal *value, int second_pos, int first_pos);
 int find_first_one(s21_decimal *value);
+void zero_or_one_insertion(s21_decimal *value_1,s21_decimal *value_2,s21_decimal *Q);
 #endif

@@ -102,10 +102,12 @@ int find_first_one(s21_decimal *value) {
   return return_position;
 }
 
-void normalization_bit(s21_decimal *value, int second_pos, int first_pos) {
-  for (int i = 0; i < first_pos - second_pos; i++) {
+int normalization_bit(s21_decimal *value, int second_pos, int first_pos) {
+  int difference = first_pos - second_pos;
+  for (int i = 0; i < difference; i++) {
     shift_left(value);
   }
+  return difference;
 }
 
 void thrust(s21_decimal *value, int bit) {
@@ -114,3 +116,16 @@ void thrust(s21_decimal *value, int bit) {
     value->bits[0] |= 0x00000001;
   }
 }
+
+void zero_or_one_insertion(s21_decimal *value_1,s21_decimal *value_2,s21_decimal *Q){
+  
+  if (s21_is_less(*value_1, *value_2)) {
+    thrust(Q, 0);
+  } else {
+    s21_sub(*value_1, *value_2, value_1);
+    thrust(Q, 1);
+  }
+}
+
+
+

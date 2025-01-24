@@ -119,44 +119,27 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   s21_decimal zero = {{0}};
   int first_bit_pos_1 = find_first_one(&value_1);
   int first_bit_pos_2 = find_first_one(&value_2);
-  normalization_bit(&value_2, first_bit_pos_2, first_bit_pos_1);
-  
-  for (int i = 0; i < first_bit_pos_1 - first_bit_pos_2 + 1; i++) {
-    
-    if (s21_is_less(value_1, value_2)) {
-      thrust(&Q, 0);
-    } else {
-      s21_sub(value_1, value_2, &value_1);
-      thrust(&Q, 1);
-    }
+  int difference_in_positions = normalization_bit(&value_2, first_bit_pos_2, first_bit_pos_1);
+  for (int i = 0; i < difference_in_positions + 1; i++) {
+    zero_or_one_insertion(&value_1,&value_2,&Q);
     if(i!=first_bit_pos_1 - first_bit_pos_2){
       shift_right(&value_2);
     }
-    
   }
-  
+  int fractional_bits = 0; // Счетчик дробных разрядов
   while(s21_is_not_equal(value_1,zero)){
-    printf("%.8X\n",value_1.bits[0]);
-    printf("Q= %.8X\n",Q.bits[0]);
     multiply_by_10(&value_1);
-    
     first_bit_pos_1 = find_first_one(&value_1);
     first_bit_pos_2 = find_first_one(&value_2);
-    normalization_bit(&value_2, first_bit_pos_2, first_bit_pos_1);
-    for (int i = 0; i < first_bit_pos_1 - first_bit_pos_2 + 1 && s21_is_not_equal(value_1,zero); i++) {
-      printf("%.8X\n",value_1.bits[0]);
-      if (s21_is_less(value_1, value_2)) {
-        thrust(&Q, 0);
-      } else {
-        s21_sub(value_1, value_2, &value_1);
-        thrust(&Q, 1);
-      }  
-      printf("Q= %.8X\n",Q.bits[0]);
+    difference_in_positions = normalization_bit(&value_2, first_bit_pos_2, first_bit_pos_1);
+    for (int i = 0; i < difference_in_positions + 1 && s21_is_not_equal(value_1,zero); i++) {
+      zero_or_one_insertion(&value_1,&value_2,&Q);
       shift_right(&value_2);
     } 
+    fractional_bits++;
   }
-
-
+  
   *result = Q;
+  set_scale(result,fractional_bits);
   return 1;
 }
