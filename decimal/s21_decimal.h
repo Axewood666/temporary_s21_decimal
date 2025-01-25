@@ -1,6 +1,7 @@
 #ifndef S21_COMPARE
 #define S21_COMPARE
 
+#include <math.h>
 #include <stdio.h>
 
 typedef struct {
@@ -19,10 +20,13 @@ int s21_is_greater(s21_decimal first, s21_decimal second);
 int s21_is_less(s21_decimal first, s21_decimal second);
 int s21_is_less_or_equal(s21_decimal first, s21_decimal second);
 int s21_is_greater_or_equal(s21_decimal first, s21_decimal second);
+
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+
+int s21_from_float_to_decimal(float src, s21_decimal *dst);
 
 // помогающие функции
 int get_sign(s21_decimal value);
@@ -42,5 +46,7 @@ void invert(s21_decimal *value);
 void thrust(s21_decimal *value, int bit);
 int normalization_bit(s21_decimal *value, int second_pos, int first_pos);
 int find_first_one(s21_decimal *value);
-void zero_or_one_insertion(s21_decimal *value_1,s21_decimal *value_2,s21_decimal *Q);
+void zero_or_one_insertion(s21_decimal *value_1, s21_decimal *value_2,
+                           s21_decimal *Q);
+int getFloatExp(float *value);
 #endif

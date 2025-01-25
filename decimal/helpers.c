@@ -117,8 +117,8 @@ void thrust(s21_decimal *value, int bit) {
   }
 }
 
-void zero_or_one_insertion(s21_decimal *value_1,s21_decimal *value_2,s21_decimal *Q){
-  
+void zero_or_one_insertion(s21_decimal *value_1, s21_decimal *value_2,
+                           s21_decimal *Q) {
   if (s21_is_less(*value_1, *value_2)) {
     thrust(Q, 0);
   } else {
@@ -127,5 +127,6 @@ void zero_or_one_insertion(s21_decimal *value_1,s21_decimal *value_2,s21_decimal
   }
 }
 
-
-
+int getFloatExp(float *value) {
+  return ((*((int *)value) & ~(1u << 31)) >> 23) - 127;
+}

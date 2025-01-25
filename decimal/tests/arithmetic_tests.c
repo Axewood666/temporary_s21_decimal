@@ -226,7 +226,7 @@ START_TEST(sub_too_small) {
   ck_assert_int_eq(s21_sub(num1, num2, &res), 2);
 }
 END_TEST
-
+//=========================================================================
 START_TEST(mul_int_both_positive) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
@@ -331,6 +331,66 @@ START_TEST(mul_too_large_scale) {
 }
 END_TEST
 
+START_TEST(div_int_both_positive) {
+  s21_decimal num1 = {{0x00000100, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x00000008, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  comparison(res1, res2);
+}
+END_TEST
+
+START_TEST(div_int_both_negative) {
+  s21_decimal num1 = {{0x00000100, 0x00000000, 0x00000000, 0x80000000}};
+  s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x80000000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x00000008, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  comparison(res1, res2);
+}
+END_TEST
+
+START_TEST(div_int_first_positive_second_negative) {
+  s21_decimal num1 = {{0x00000100, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x80000000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x00000008, 0x00000000, 0x00000000, 0x80000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  comparison(res1, res2);
+}
+END_TEST
+
+START_TEST(div_int_first_negative_second_positive) {
+  s21_decimal num1 = {{0x00000100, 0x00000000, 0x00000000, 0x80000000}};
+  s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x00000008, 0x00000000, 0x00000000, 0x80000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
+  comparison(res1, res2);
+}
+END_TEST
+
+START_TEST(div_int_both_positive_with_not_int_result) {
+  s21_decimal num1 = {{0x00000009, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000002, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x0000002D, 0x00000000, 0x00000000, 0x00010000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  comparison(res1, res2);
+}
+END_TEST
+
+START_TEST(div_int_both_negative_with_not_int_result) {
+  s21_decimal num1 = {{0x00000009, 0x00000000, 0x00000000, 0x80000000}};
+  s21_decimal num2 = {{0x00000002, 0x00000000, 0x00000000, 0x80000000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x0000002D, 0x00000000, 0x00000000, 0x00010000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  comparison(res1, res2);
+}
+END_TEST
+
 Suite *test_arithmetic(void) {
   Suite *s = suite_create("Arithmetic test");
   TCase *tc = tcase_create("Tests");
@@ -370,6 +430,13 @@ Suite *test_arithmetic(void) {
   tcase_add_test(tc, mul_not_int_first_negative_second_positive);
   tcase_add_test(tc, mul_too_large);
   tcase_add_test(tc, mul_too_small);
+
+  tcase_add_test(tc, div_int_both_positive);
+  tcase_add_test(tc, div_int_both_negative);
+  // tcase_add_test(tc, div_int_first_positive_second_negative);
+  // tcase_add_test(tc, div_int_first_negative_second_positive);
+  tcase_add_test(tc, div_int_both_positive_with_not_int_result);
+  tcase_add_test(tc, div_int_both_negative_with_not_int_result);
 
   suite_add_tcase(s, tc);
   return s;
