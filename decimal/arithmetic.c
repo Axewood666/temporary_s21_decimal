@@ -127,10 +127,13 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
       shift_right(&value_2);
     }
   }
+  // printf("%d",Q.bits[0]);
   int fractional_bits = 0;  // Счетчик дробных разрядов
   while (s21_is_not_equal(value_1, zero)) {
     multiply_by_10(&value_1);
-    shift_left(&value_1);
+    multiply_by_10(&Q);
+    s21_decimal aidar = {{0}};
+    printf("\n%d\n",Q.bits[0]);
     first_bit_pos_1 = find_first_one(&value_1);
     first_bit_pos_2 = find_first_one(&value_2);
     difference_in_positions =
@@ -138,12 +141,14 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     for (int i = 0;
          i < difference_in_positions + 1 && s21_is_not_equal(value_1, zero);
          i++) {
-      zero_or_one_insertion(&value_1, &value_2, &Q);
+      zero_or_one_insertion(&value_1, &value_2, &aidar);
       shift_right(&value_2);
     }
+    s21_add(Q,aidar,&Q);
     fractional_bits++;
+    printf("\n%d\n",aidar.bits[0]);
   }
-
+  //multiply_by_10(&Q);
   *result = Q;
   set_scale(result, fractional_bits);
   return 1;
