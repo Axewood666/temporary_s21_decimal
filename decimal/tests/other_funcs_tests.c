@@ -1,19 +1,14 @@
-#include "../s21_decimal.h"
-#include <check.h>
+#include "helpers_test.h"
 
-START_TEST(test_test)
-{
-    ck_assert_int_eq(1, 1);
-}
+START_TEST(test_test) { ck_assert_int_eq(1, 1); }
 END_TEST
 
-Suite *test_other_funcs(void)
-{
-    Suite *s = suite_create("Other funcs test");
-    TCase *tc = tcase_create("Tests");
+Suite *test_other_funcs(void) {
+  Suite *s = suite_create("Other funcs test");
+  TCase *tc = tcase_create("Tests");
 
-    tcase_add_test(tc, test_test);
+  tcase_add_test(tc, test_test);
 
-    suite_add_tcase(s, tc);
-    return s;
+  suite_add_tcase(s, tc);
+  return s;
 }

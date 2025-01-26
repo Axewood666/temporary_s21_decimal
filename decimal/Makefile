@@ -8,15 +8,15 @@ csharp_dir=.
 
 lib_name=s21_decimal.a
 SRCS := $(temp_dir)/arithmetic.c $(sprintf_dir)/comparasion.c \
-	$(csharp_dir)/helpers.c $(csharp_dir)/main.c $(csharp_dir)/convertor_float.c
-
+	$(csharp_dir)/helpers.c $(csharp_dir)/main.c $(csharp_dir)/convertors.c \
 #$(csharp_dir)/other_funcs 
 OBJS := $(SRCS:.c=.o)
 GCOV_OBJS := $(SRCS:.c=_gcov.o)
 DEBUG_OBJS := $(SRCS:.c=_debug.o)
 
 test_files=$(test_dir)/arithmetic_tests.c $(test_dir)/comparison_tests.c \
-	$(test_dir)/conversion_tests.c #$(test_dir)/other_funcs_tests.c 
+	$(test_dir)/conversion_tests.c $(test_dir)/other_funcs_tests.c \
+	$(test_dir)/helpers_test.c
 TEST_OBJS := $(test_files:.c=.o)
 files_for_report=*.gcno *.gcda */*.gcno */*.gcda test_with_gcov s21_string_gcov.a
 
@@ -107,4 +107,4 @@ $(test_dir)/%.o: $(test_dir)/%.c
 
 #for debug 
 debug: $(DEBUG_OBJS)
-	gcc $(DEBUG_OBJS) -o temp_debug
+	gcc $(DEBUG_OBJS) -o temp_debug -lm

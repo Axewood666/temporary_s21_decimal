@@ -1,13 +1,4 @@
-#include <check.h>
-
-#include "../s21_decimal.h"
-
-void comparison(s21_decimal num1, s21_decimal num2) {
-  ck_assert_int_eq(num1.bits[0], num2.bits[0]);
-  ck_assert_int_eq(num1.bits[1], num2.bits[1]);
-  ck_assert_int_eq(num1.bits[2], num2.bits[2]);
-  ck_assert_int_eq(num1.bits[3], num2.bits[3]);
-}
+#include "helpers_test.h"
 
 START_TEST(add_int_both_positive) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};

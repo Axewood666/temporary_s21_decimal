@@ -1,6 +1,4 @@
-#include <check.h>
-
-#include "../s21_decimal.h"
+#include "helpers_test.h"
 
 START_TEST(equal_true) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
