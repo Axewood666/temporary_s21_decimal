@@ -111,29 +111,32 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 }
 
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  for (int i = 0; i < 4; i++) result->bits[i] = 0;
-  int scale_1 = get_scale(value_1);
-  int scale_2 = get_scale(value_2);
-  align_scales(scale_1, scale_2, &value_1, &value_2);
-  s21_decimal Q = {{0}};
+  int status = 0;
   s21_decimal zero = {{0}};
+  if(s21_is_equal(value_2,zero)){
+    return 4;
+  }
+
+  int sign = get_sign(value_1) ^ get_sign(value_2);
+  int fractional_bits = get_scale(value_2) - get_scale(value_1);
+  value_1.bits[3] = 0;value_2.bits[3] = 0;  
+  for (int i = 0; i < 4; i++) result->bits[i] = 0;
+  s21_decimal Q = {{0}};
+  
   int first_bit_pos_1 = find_first_one(&value_1);
   int first_bit_pos_2 = find_first_one(&value_2);
   int difference_in_positions =
       normalization_bit(&value_2, first_bit_pos_2, first_bit_pos_1);
   for (int i = 0; i < difference_in_positions + 1; i++) {
-    zero_or_one_insertion(&value_1, &value_2, &Q);
+    status = zero_or_one_insertion(&value_1, &value_2, &Q);
     if (i != first_bit_pos_1 - first_bit_pos_2) {
       shift_right(&value_2);
     }
-  }
-  // printf("%d",Q.bits[0]);
-  int fractional_bits = 0;  // Счетчик дробных разрядов
+  } 
   while (s21_is_not_equal(value_1, zero)) {
     multiply_by_10(&value_1);
     multiply_by_10(&Q);
-    s21_decimal aidar = {{0}};
-    printf("\n%d\n",Q.bits[0]);
+    s21_decimal temp = {{0}};
     first_bit_pos_1 = find_first_one(&value_1);
     first_bit_pos_2 = find_first_one(&value_2);
     difference_in_positions =
@@ -141,15 +144,15 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     for (int i = 0;
          i < difference_in_positions + 1 && s21_is_not_equal(value_1, zero);
          i++) {
-      zero_or_one_insertion(&value_1, &value_2, &aidar);
+      zero_or_one_insertion(&value_1, &value_2, &temp);
       shift_right(&value_2);
     }
-    s21_add(Q,aidar,&Q);
+    status = s21_add(Q,temp,&Q);
     fractional_bits++;
-    printf("\n%d\n",aidar.bits[0]);
   }
-  //multiply_by_10(&Q);
+  
   *result = Q;
   set_scale(result, fractional_bits);
-  return 1;
+  set_sign(result,sign);
+  return status;
 }
