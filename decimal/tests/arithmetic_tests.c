@@ -327,7 +327,7 @@ START_TEST(div_int_both_positive) {
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal res2 = {{0x00000008, 0x00000000, 0x00000000, 0x00000000}};
-  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
   comparison(res1, res2);
 }
 END_TEST
@@ -337,7 +337,7 @@ START_TEST(div_int_both_negative) {
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x80000000}};
   s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal res2 = {{0x00000008, 0x00000000, 0x00000000, 0x00000000}};
-  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
   comparison(res1, res2);
 }
 END_TEST
@@ -347,7 +347,7 @@ START_TEST(div_int_first_positive_second_negative) {
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x80000000}};
   s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal res2 = {{0x00000008, 0x00000000, 0x00000000, 0x80000000}};
-  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
   comparison(res1, res2);
 }
 END_TEST
@@ -367,7 +367,7 @@ START_TEST(div_int_both_positive_with_not_int_result) {
   s21_decimal num2 = {{0x00000002, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal res2 = {{0x0000002D, 0x00000000, 0x00000000, 0x00010000}};
-  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
   comparison(res1, res2);
 }
 END_TEST
@@ -377,7 +377,33 @@ START_TEST(div_int_both_negative_with_not_int_result) {
   s21_decimal num2 = {{0x00000002, 0x00000000, 0x00000000, 0x80000000}};
   s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal res2 = {{0x0000002D, 0x00000000, 0x00000000, 0x00010000}};
-  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
+  comparison(res1, res2);
+}
+END_TEST
+START_TEST(div_by_zero) {
+  s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res), 3);  // Ожидаем ошибку
+}
+END_TEST
+START_TEST(div_not_int_both_positive) {
+  s21_decimal num1 = {{0x00000112, 0x00000000, 0x00000000, 0x00020000}};  // 10.000
+  s21_decimal num2 = {{0x00000004, 0x00000000, 0x00000000, 0x00000000}};  // 1.00
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x000002AD, 0x00000000, 0x00000000, 0x00030000}};  // 10.00
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
+  comparison(res1, res2);
+}
+END_TEST
+
+START_TEST(div_not_int_one_positive) {
+  s21_decimal num1 = {{0x00000112, 0x00000000, 0x00000000, 0x80020000}};  // 10.000
+  s21_decimal num2 = {{0x00000004, 0x00000000, 0x00000000, 0x00010000}};  // 1.00
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x000002AD, 0x00000000, 0x00000000, 0x80020000}};  // 10.00
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
   comparison(res1, res2);
 }
 END_TEST
@@ -424,10 +450,13 @@ Suite *test_arithmetic(void) {
 
   tcase_add_test(tc, div_int_both_positive);
   tcase_add_test(tc, div_int_both_negative);
-  // tcase_add_test(tc, div_int_first_positive_second_negative);
-  // tcase_add_test(tc, div_int_first_negative_second_positive);
+  tcase_add_test(tc, div_int_first_positive_second_negative);
+  tcase_add_test(tc, div_int_first_negative_second_positive);
   tcase_add_test(tc, div_int_both_positive_with_not_int_result);
   tcase_add_test(tc, div_int_both_negative_with_not_int_result);
+  tcase_add_test(tc, div_by_zero);
+  tcase_add_test(tc, div_not_int_both_positive);
+  tcase_add_test(tc, div_not_int_one_positive);
 
   suite_add_tcase(s, tc);
   return s;

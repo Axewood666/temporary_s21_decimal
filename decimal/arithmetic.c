@@ -114,11 +114,12 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int status = 0;
   s21_decimal zero = {{0}};
   if(s21_is_equal(value_2,zero)){
-    return 4;
+    return 3;
   }
 
   int sign = get_sign(value_1) ^ get_sign(value_2);
   int fractional_bits = get_scale(value_2) - get_scale(value_1);
+  fractional_bits = (fractional_bits<0) ? fractional_bits*(-1) : fractional_bits; 
   value_1.bits[3] = 0;value_2.bits[3] = 0;  
   for (int i = 0; i < 4; i++) result->bits[i] = 0;
   s21_decimal Q = {{0}};
