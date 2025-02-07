@@ -89,6 +89,11 @@ lcov_report: gcov
 	lcov --rc branch_coverage=1 -d . -o s21_decimal_coverage.info -c
 	genhtml --branch-coverage s21_decimal_coverage.info --output-directory gcov_report
 	rm -f s21_decimal_coverage.info $(files_for_report)
+
+cppcheck:
+	cppcheck --enable=all --suppress=missingIncludeSystem .
+
+
 #---------------
 
 #for obj
@@ -103,8 +108,11 @@ $(test_dir)/%.o: $(test_dir)/%.c
 
 %_debug.o: %.c
 	@$(CC) $(FLAGS) -c -g $< -o $@
+
+
 #--------------- 
 
 #for debug 
 debug: $(DEBUG_OBJS)
 	gcc $(DEBUG_OBJS) -o temp_debug -lm
+

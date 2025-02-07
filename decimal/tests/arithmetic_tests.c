@@ -389,20 +389,26 @@ START_TEST(div_by_zero) {
 }
 END_TEST
 START_TEST(div_not_int_both_positive) {
-  s21_decimal num1 = {{0x00000112, 0x00000000, 0x00000000, 0x00020000}};  // 10.000
-  s21_decimal num2 = {{0x00000004, 0x00000000, 0x00000000, 0x00000000}};  // 1.00
+  s21_decimal num1 = {
+      {0x00000112, 0x00000000, 0x00000000, 0x00020000}};  // 10.000
+  s21_decimal num2 = {
+      {0x00000004, 0x00000000, 0x00000000, 0x00000000}};  // 1.00
   s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
-  s21_decimal res2 = {{0x000002AD, 0x00000000, 0x00000000, 0x00030000}};  // 10.00
+  s21_decimal res2 = {
+      {0x000002AD, 0x00000000, 0x00000000, 0x00030000}};  // 10.00
   ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
   comparison(res1, res2);
 }
 END_TEST
 
 START_TEST(div_not_int_one_positive) {
-  s21_decimal num1 = {{0x00000112, 0x00000000, 0x00000000, 0x80020000}};  // 10.000
-  s21_decimal num2 = {{0x00000004, 0x00000000, 0x00000000, 0x00010000}};  // 1.00
+  s21_decimal num1 = {
+      {0x00000112, 0x00000000, 0x00000000, 0x80020000}};  // 10.000
+  s21_decimal num2 = {
+      {0x00000004, 0x00000000, 0x00000000, 0x00010000}};  // 1.00
   s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
-  s21_decimal res2 = {{0x000002AD, 0x00000000, 0x00000000, 0x80020000}};  // 10.00
+  s21_decimal res2 = {
+      {0x000002AD, 0x00000000, 0x00000000, 0x80020000}};  // 10.00
   ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
   comparison(res1, res2);
 }

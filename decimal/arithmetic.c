@@ -28,9 +28,9 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   if (sign_1 == sign_2) {
     align_scales(get_scale(value_1), get_scale(value_2), &value_1, &value_2);
     if (add_bits(value_1, value_2, result) == 1) {
-      if ((!get_scale(inital_value_1) | !get_scale(inital_value_2)) & !sign_1) {
+      if ((!get_scale(inital_value_1) || !get_scale(inital_value_2)) && !sign_1) {
         status = 1;
-      } else if ((!get_scale(value_1) | !get_scale(value_2)) & sign_1) {
+      } else if ((!get_scale(value_1) || !get_scale(value_2)) && sign_1) {
         status = 2;
       } else if ((get_scale(value_1) > 0) & (get_scale(value_2) > 0)) {
         // реализовать банковское округление
