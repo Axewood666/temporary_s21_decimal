@@ -51,4 +51,5 @@ int find_first_one(s21_decimal *value);
 int zero_or_one_insertion(s21_decimal *value_1, s21_decimal *value_2,
                            s21_decimal *Q);
 int getFloatExp(float *value);
+int div_int(s21_decimal *value_1, s21_decimal *value_2, s21_decimal *Q);
 #endif
