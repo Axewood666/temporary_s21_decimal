@@ -3,6 +3,8 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct {
   unsigned int bits[4];
@@ -32,7 +34,6 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst);
 
 int s21_truncate(s21_decimal value, s21_decimal *result);
 
-
 // помогающие функции
 int get_sign(s21_decimal value);
 int get_scale(s21_decimal value);
@@ -52,7 +53,7 @@ void thrust(s21_decimal *value, int bit);
 int normalization_bit(s21_decimal *value, int second_pos, int first_pos);
 int find_first_one(s21_decimal *value);
 int zero_or_one_insertion(s21_decimal *value_1, s21_decimal *value_2,
-                           s21_decimal *Q);
+                          s21_decimal *Q);
 int getFloatExp(float *value);
 int div_int(s21_decimal *value_1, s21_decimal *value_2, s21_decimal *Q);
 #endif
