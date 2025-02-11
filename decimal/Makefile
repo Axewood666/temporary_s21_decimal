@@ -9,7 +9,7 @@ csharp_dir=.
 lib_name=s21_decimal.a
 SRCS := $(temp_dir)/arithmetic.c $(sprintf_dir)/comparasion.c \
 	$(csharp_dir)/helpers.c $(csharp_dir)/main.c $(csharp_dir)/convertors.c \
-#$(csharp_dir)/other_funcs 
+	$(csharp_dir)/other_funcs.c 
 OBJS := $(SRCS:.c=.o)
 GCOV_OBJS := $(SRCS:.c=_gcov.o)
 DEBUG_OBJS := $(SRCS:.c=_debug.o)

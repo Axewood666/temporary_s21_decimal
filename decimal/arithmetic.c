@@ -28,7 +28,8 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   if (sign_1 == sign_2) {
     align_scales(get_scale(value_1), get_scale(value_2), &value_1, &value_2);
     if (add_bits(value_1, value_2, result) == 1) {
-      if ((!get_scale(inital_value_1) || !get_scale(inital_value_2)) && !sign_1) {
+      if ((!get_scale(inital_value_1) || !get_scale(inital_value_2)) &&
+          !sign_1) {
         status = 1;
       } else if ((!get_scale(value_1) || !get_scale(value_2)) && sign_1) {
         status = 2;
@@ -113,17 +114,19 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int status = 0;
   s21_decimal zero = {{0}};
-  if(s21_is_equal(value_2,zero)){
+  if (s21_is_equal(value_2, zero)) {
     return 3;
   }
 
   int sign = get_sign(value_1) ^ get_sign(value_2);
   int fractional_bits = get_scale(value_2) - get_scale(value_1);
-  fractional_bits = (fractional_bits<0) ? fractional_bits*(-1) : fractional_bits; 
-  value_1.bits[3] = 0;value_2.bits[3] = 0;  
+  fractional_bits =
+      (fractional_bits < 0) ? fractional_bits * (-1) : fractional_bits;
+  value_1.bits[3] = 0;
+  value_2.bits[3] = 0;
   for (int i = 0; i < 4; i++) result->bits[i] = 0;
   s21_decimal Q = {{0}};
-  
+
   // int first_bit_pos_1 = find_first_one(&value_1);
   // int first_bit_pos_2 = find_first_one(&value_2);
   // int difference_in_positions =
@@ -135,7 +138,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   //   }
   // }
 
-  status = div_int(&value_1,&value_2,&Q);
+  status = div_int(&value_1, &value_2, &Q);
 
   while (s21_is_not_equal(value_1, zero)) {
     multiply_by_10(&value_1);
@@ -151,12 +154,12 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
       zero_or_one_insertion(&value_1, &value_2, &temp);
       shift_right(&value_2);
     }
-    status = s21_add(Q,temp,&Q);
+    status = s21_add(Q, temp, &Q);
     fractional_bits++;
   }
-  
+
   *result = Q;
   set_scale(result, fractional_bits);
-  set_sign(result,sign);
+  set_sign(result, sign);
   return status;
 }

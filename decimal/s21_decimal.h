@@ -56,4 +56,10 @@ int zero_or_one_insertion(s21_decimal *value_1, s21_decimal *value_2,
                           s21_decimal *Q);
 int getFloatExp(float *value);
 int div_int(s21_decimal *value_1, s21_decimal *value_2, s21_decimal *Q);
+
+int get_first_digit_after_decimal(s21_decimal value);
+int s21_round(s21_decimal value, s21_decimal *result);
+int s21_truncate(s21_decimal value, s21_decimal *result);
+int s21_negate(s21_decimal value, s21_decimal *result);
+int s21_floor(s21_decimal value, s21_decimal *result);
 #endif

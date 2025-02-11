@@ -17,7 +17,7 @@ void set_sign(s21_decimal *value, int sign) {
 
 // Установить масштаб результата
 void set_scale(s21_decimal *value, int scale) {
-  value->bits[3] &= ~SCALE_MASK;    // Очистить текущий масштаб
+  value->bits[3] &= ~SCALE_MASK;  // Очистить текущий масштаб
   value->bits[3] |= (scale << 16);  // Установить новый масштаб
 }
 
@@ -118,7 +118,7 @@ void thrust(s21_decimal *value, int bit) {
 }
 
 int zero_or_one_insertion(s21_decimal *value_1, s21_decimal *value_2,
-                           s21_decimal *Q) {
+                          s21_decimal *Q) {
   int status = 0;
   if (s21_is_less(*value_1, *value_2)) {
     thrust(Q, 0);
@@ -133,7 +133,7 @@ int getFloatExp(float *value) {
   return ((*((int *)value) & ~(1u << 31)) >> 23) - 127;
 }
 
-int div_int(s21_decimal *value_1, s21_decimal *value_2, s21_decimal *Q){
+int div_int(s21_decimal *value_1, s21_decimal *value_2, s21_decimal *Q) {
   int status = 0;
   int first_bit_pos_1 = find_first_one(value_1);
   int first_bit_pos_2 = find_first_one(value_2);
@@ -146,4 +146,25 @@ int div_int(s21_decimal *value_1, s21_decimal *value_2, s21_decimal *Q){
     }
   }
   return status;
+}
+
+int get_first_digit_after_decimal(s21_decimal value) {
+  int first_digit = 0;
+  int scale = get_scale(value);
+  int sign = get_sign(value);
+  if (sign) {
+    s21_negate(value, &value);
+  }
+  if (scale > 0) {
+    s21_decimal temp = value;
+    set_scale(&temp, 0);
+    s21_decimal ten = {{1, 0, 0, 0}};
+    s21_decimal result = {{0, 0, 0, 0}};
+    for (int i = 0; i < scale - 1; i++) {
+      multiply_by_10(&ten);
+    }
+    div_int(&temp, &ten, &result);
+    first_digit = result.bits[0] % 10;
+  }
+  return first_digit;
 }
