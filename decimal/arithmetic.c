@@ -127,17 +127,6 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   for (int i = 0; i < 4; i++) result->bits[i] = 0;
   s21_decimal Q = {{0}};
 
-  // int first_bit_pos_1 = find_first_one(&value_1);
-  // int first_bit_pos_2 = find_first_one(&value_2);
-  // int difference_in_positions =
-  //     normalization_bit(&value_2, first_bit_pos_2, first_bit_pos_1);
-  // for (int i = 0; i < difference_in_positions + 1; i++) {
-  //   status = zero_or_one_insertion(&value_1, &value_2, &Q);
-  //   if (i != first_bit_pos_1 - first_bit_pos_2) {
-  //     shift_right(&value_2);
-  //   }
-  // }
-
   status = div_int(&value_1, &value_2, &Q);
 
   while (s21_is_not_equal(value_1, zero)) {

@@ -207,6 +207,13 @@ START_TEST(
 }
 END_TEST
 
+START_TEST(float_to_decimal_error_dst_null) {
+  s21_decimal number_decimal;
+  float number_float = -123.456789;
+  ck_assert_int_eq(s21_from_float_to_decimal(number_float, NULL), 1);
+}
+END_TEST
+
 Suite *test_conversion(void) {
   Suite *s = suite_create("Conversion test");
   TCase *tc = tcase_create("Tests");
@@ -242,6 +249,7 @@ Suite *test_conversion(void) {
   tcase_add_test(
       tc,
       float_to_decimal_negative_number_with_fractional_part_greater_10_round);
+  tcase_add_test(tc, float_to_decimal_error_dst_null);
 
   suite_add_tcase(s, tc);
   return s;
