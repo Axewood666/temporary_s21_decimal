@@ -36,16 +36,11 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   if (dst && (getFloatExp(&src) < 96)) {
     char s_number[32];
     int scale = 0;
-    printf("float = %f\n", src);
     sprintf(s_number, "%E", src);
-    printf("e_notation = %s\n", s_number);
     strtok(s_number, ".");
     strcat(s_number, strtok(NULL, "."));
-    printf("e_notation_witout_dot = %s\n", s_number);
     char *s_mantissa_with_zeros = strtok(s_number, "E");
-    printf("mantissa = %s\n", s_mantissa_with_zeros);
     char *s_scale = strtok(NULL, "E");
-    printf("e_scale_from_e_notation = %s\n", s_scale);
     int e_scale = atoi(s_scale);
     int zero_count = 0;
     for (int i = strlen(s_mantissa_with_zeros) - 1; i > 0; i--) {
@@ -54,18 +49,15 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
       }
     }
     int number_count = strlen(s_mantissa_with_zeros) - zero_count;
-    printf("number_count = %d\n", number_count);
     if (e_scale > 0) {
       scale = 6 - zero_count - e_scale;
     } else {
       scale = number_count - 1 - e_scale;
     }
-    printf("finally scale = %d\n", scale);
     if (scale <= 28) {
       char s_mantissa[number_count + 1];
       strncpy(s_mantissa, s_mantissa_with_zeros, number_count);
       s_mantissa[number_count] = '\0';
-      printf("mantissa_without_zero = %s\n", s_mantissa);
       int mantissa = atoi(s_mantissa);
       if (scale < 0) {
         mantissa *= pow(10, -scale);
@@ -80,6 +72,19 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
       status = 0;
     }
   }
-  printf("\n");
+  return status;
+}
+
+int s21_from_decimal_to_float(s21_decimal src, float *dst) {
+  int status = 1;
+  if (dst && src.bits[1] == 0 && src.bits[2] == 0) {
+    *dst = (float)src.bits[0] / pow(10, get_scale(src));
+    if (get_sign(src)) {
+      {
+        *dst *= -1;
+      }
+    }
+    status = 0;
+  }
   return status;
 }

@@ -1,29 +1,13 @@
 #include "s21_decimal.h"
 
 int main() {
-  s21_decimal d_num = {{0, 0x00000000, 0x00000000, 0x00000000}};
-  float f_num = 123.456;
-  s21_from_float_to_decimal(f_num, &d_num);
-  printf("|%8.8X| |%8.8X| |%8.8X| |%8.8X|\n", d_num.bits[0], d_num.bits[1],
-         d_num.bits[2], d_num.bits[3]);
-  printf("\n");
-  f_num = 123;
-  s21_from_float_to_decimal(f_num, &d_num);
-  printf("|%8.8X| |%8.8X| |%8.8X| |%8.8X|\n", d_num.bits[0], d_num.bits[1],
-         d_num.bits[2], d_num.bits[3]);
-  printf("\n");
-  f_num = 123.456789;
-  s21_from_float_to_decimal(f_num, &d_num);
-  printf("|%8.8X| |%8.8X| |%8.8X| |%8.8X|\n", d_num.bits[0], d_num.bits[1],
-         d_num.bits[2], d_num.bits[3]);
-  printf("\n");
-  f_num = 0.001234;
-  s21_from_float_to_decimal(f_num, &d_num);
-  printf("|%8.8X| |%8.8X| |%8.8X| |%8.8X|\n", d_num.bits[0], d_num.bits[1],
-         d_num.bits[2], d_num.bits[3]);
-  printf("\n");
-  f_num = 0.0012345678;
-  s21_from_float_to_decimal(f_num, &d_num);
-  printf("|%8.8X| |%8.8X| |%8.8X| |%8.8X|\n", d_num.bits[0], d_num.bits[1],
-         d_num.bits[2], d_num.bits[3]);
+  s21_decimal number_decimal = {
+      {0x0001E240, 0x00000000, 0x00000000, 0x00000000}};
+  float result_float = 0;
+  // float extended_float = 123456;
+  printf("%d\n", s21_from_decimal_to_float(number_decimal, &result_float));
+  printf("%f", result_float);
+  // printf("|%8.8X| |%8.8X| |%8.8X| |%8.8X|\n", number_decimal.bits[0],
+  //        number_decimal.bits[1], number_decimal.bits[2],
+  //        number_decimal.bits[3]);
 }
