@@ -1,0 +1,128 @@
+hubert make test > err.txt
+tests/arithmetic/test_mod.c:85925: warning: ISO C forbids an empty translation unit [-Wpedantic]
+ld: warning: ignoring file s21_decimal.a, building for macOS-x86_64 but attempting to link with file built for unknown-unsupported file format ( 0x21 0x3C 0x61 0x72 0x63 0x68 0x3E 0x0A 0x2F 0x20 0x20 0x20 0x20 0x20 0x20 0x20 )
+Undefined symbols for architecture x86_64:
+  "_s21_add", referenced from:
+      _test_add_fail_manual1_fn in test_add.o
+      _test_add_fail_manual2_fn in test_add.o
+      _test_add_fail_manual3_fn in test_add.o
+      _test_add_fail_manual4_fn in test_add.o
+      _test_add_fail_manual5_fn in test_add.o
+      _test_add_fail_manual6_fn in test_add.o
+      _test_add_fail_manual7_fn in test_add.o
+      ...
+  "_s21_div", referenced from:
+      _test_div_fail_manual1_fn in test_div.o
+      _test_div_fail_manual2_fn in test_div.o
+      _test_div_fail_manual3_fn in test_div.o
+      _test_div_fail_manual4_fn in test_div.o
+      _test_div_fail_manual5_fn in test_div.o
+      _test_div_fail_manual6_fn in test_div.o
+      _test_div_fail_manual7_fn in test_div.o
+      ...
+  "_s21_floor", referenced from:
+      _test_floor_fail1_fn in test_floor.o
+      _test_floor_fail2_fn in test_floor.o
+      _test_floor_fail3_fn in test_floor.o
+      _test_floor_fail4_fn in test_floor.o
+      _test_floor_fail5_fn in test_floor.o
+      _test_floor_fail6_fn in test_floor.o
+      _test_floor_fail7_fn in test_floor.o
+      ...
+  "_s21_from_decimal_to_float", referenced from:
+      _test_from_decimal_to_float_fail_manual1_fn in test_from_decimal_to_float.o
+      _test_from_decimal_to_float_fail_manual2_fn in test_from_decimal_to_float.o
+      _test_from_decimal_to_float_fail_manual3_fn in test_from_decimal_to_float.o
+      _test_from_decimal_to_float_fail_manual4_fn in test_from_decimal_to_float.o
+      _test_from_decimal_to_float_fail_manual5_fn in test_from_decimal_to_float.o
+      _test_from_decimal_to_float_fail_manual6_fn in test_from_decimal_to_float.o
+      _test_from_decimal_to_float_fail_manual7_fn in test_from_decimal_to_float.o
+      ...
+  "_s21_from_decimal_to_int", referenced from:
+      _test_from_decimal_to_int_fail_manual1_fn in test_from_decimal_to_int.o
+      _test_from_decimal_to_int_fail_manual2_fn in test_from_decimal_to_int.o
+      _test_from_decimal_to_int_fail_manual3_fn in test_from_decimal_to_int.o
+      _test_from_decimal_to_int_fail_manual4_fn in test_from_decimal_to_int.o
+      _test_from_decimal_to_int_fail_manual5_fn in test_from_decimal_to_int.o
+      _test_from_decimal_to_int_fail_manual6_fn in test_from_decimal_to_int.o
+      _test_from_decimal_to_int_fail_manual7_fn in test_from_decimal_to_int.o
+      ...
+  "_s21_from_float_to_decimal", referenced from:
+      _test_from_float_to_decimal_unnormal1_fn in test_from_float_to_decimal.o
+      _test_from_float_to_decimal_unnormal2_fn in test_from_float_to_decimal.o
+      _test_from_float_to_decimal_unnormal3_fn in test_from_float_to_decimal.o
+      _test_from_float_to_decimal_unnormal4_fn in test_from_float_to_decimal.o
+      _test_from_float_to_decimal_unnormal5_fn in test_from_float_to_decimal.o
+      _test_from_float_to_decimal_unnormal6_fn in test_from_float_to_decimal.o
+      _test_from_float_to_decimal_incorrect1_fn in test_from_float_to_decimal.o
+      ...
+  "_s21_from_int_to_decimal", referenced from:
+      _test_from_int_to_decimal_fail1_fn in test_from_int_to_decimal.o
+      _test_from_int_to_decimal in test_from_int_to_decimal.o
+  "_s21_is_equal", referenced from:
+      _test_add in test_add.o
+      _test_div in test_div.o
+      _test_div_fail2 in test_div.o
+      _test_mul in test_mul.o
+      _test_mul_fail2 in test_mul.o
+      _test_sub in test_sub.o
+      _test_is_equal in test_is_equal.o
+      ...
+  "_s21_is_greater", referenced from:
+      _test_is_greater in test_is_greater.o
+  "_s21_is_greater_or_equal", referenced from:
+      _test_is_greater_or_equal in test_is_greater_or_equal.o
+  "_s21_is_less", referenced from:
+      _test_is_less in test_is_less.o
+  "_s21_is_less_or_equal", referenced from:
+      _test_is_less_or_equal in test_is_less_or_equal.o
+  "_s21_is_not_equal", referenced from:
+      _test_is_not_equal in test_is_not_equal.o
+  "_s21_mul", referenced from:
+      _test_mul_fail_manual1_fn in test_mul.o
+      _test_mul_fail_manual2_fn in test_mul.o
+      _test_mul_fail_manual3_fn in test_mul.o
+      _test_mul_fail_manual4_fn in test_mul.o
+      _test_mul_fail_manual5_fn in test_mul.o
+      _test_mul_fail_manual6_fn in test_mul.o
+      _test_mul_fail_manual7_fn in test_mul.o
+      ...
+  "_s21_negate", referenced from:
+      _test_negate_fail1_fn in test_negate.o
+      _test_negate_fail2_fn in test_negate.o
+      _test_negate_fail3_fn in test_negate.o
+      _test_negate_fail4_fn in test_negate.o
+      _test_negate_fail5_fn in test_negate.o
+      _test_negate_fail6_fn in test_negate.o
+      _test_negate_fail7_fn in test_negate.o
+      ...
+  "_s21_round", referenced from:
+      _test_round_fail1_fn in test_round.o
+      _test_round_fail2_fn in test_round.o
+      _test_round_fail3_fn in test_round.o
+      _test_round_fail4_fn in test_round.o
+      _test_round_fail5_fn in test_round.o
+      _test_round_fail6_fn in test_round.o
+      _test_round_fail7_fn in test_round.o
+      ...
+  "_s21_sub", referenced from:
+      _test_sub_fail_manual1_fn in test_sub.o
+      _test_sub_fail_manual2_fn in test_sub.o
+      _test_sub_fail_manual3_fn in test_sub.o
+      _test_sub_fail_manual4_fn in test_sub.o
+      _test_sub_fail_manual5_fn in test_sub.o
+      _test_sub_fail_manual6_fn in test_sub.o
+      _test_sub_fail_manual7_fn in test_sub.o
+      ...
+  "_s21_truncate", referenced from:
+      _test_truncate_fail1_fn in test_truncate.o
+      _test_truncate_fail2_fn in test_truncate.o
+      _test_truncate_fail3_fn in test_truncate.o
+      _test_truncate_fail4_fn in test_truncate.o
+      _test_truncate_fail5_fn in test_truncate.o
+      _test_truncate_fail6_fn in test_truncate.o
+      _test_truncate_fail7_fn in test_truncate.o
+      ...
+ld: symbol(s) not found for architecture x86_64
+collect2: error: ld returned 1 exit status
+make: *** [test] Error 1
