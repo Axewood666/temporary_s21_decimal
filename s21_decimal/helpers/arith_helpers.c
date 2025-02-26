@@ -36,6 +36,8 @@ double_decimal binary_mul_big(double_decimal value_1,s21_decimal value_2){
     return result;
 }
 
+
+
 double_decimal double_decimal_add(double_decimal value_1,double_decimal value_2){
     int carry = 0;  // перенос
     double_decimal result = create_double_decimal_from_decimal(create_zero_decimal());
@@ -45,18 +47,9 @@ double_decimal double_decimal_add(double_decimal value_1,double_decimal value_2)
         int sum = bit_1 + bit_2 + carry;
         set_bit_big(&result, i, sum % 2);
         carry = sum / 2;
-        // printf("%d -> %d ->|%.x||%.x||%.x||%.x||%.x||%.x||%.x||%.x|\n",i,sum,result.decimal[1].bits[3],
-        //     result.decimal[1].bits[2],
-        //     result.decimal[1].bits[1],
-        //     result.decimal[1].bits[0],
-        //     result.decimal[0].bits[3],
-        //     result.decimal[0].bits[2],
-        //     result.decimal[0].bits[1],
-        //     result.decimal[0].bits[0]
-        // );
     }
-    
     return result;
+
 }
 
 s21_decimal s21_decimal_add(s21_decimal value_1,s21_decimal value_2){
@@ -102,64 +95,90 @@ int get_shift_to_decimal(double_decimal value){
 
 double_decimal double_decimal_binary_division(double_decimal value_1,double_decimal value_2,double_decimal *remainder){
     double_decimal result;
-    double_decimal partial_remainder = create_double_decimal_from_decimal(create_zero_decimal());
+
+    double_decimal partial_reminder = create_double_decimal_from_decimal(create_zero_decimal());
     double_decimal quotient = create_double_decimal_from_decimal(create_zero_decimal());
+
     if(s21_decimal_binary_equal_zero(value_1.decimal[0]) && s21_decimal_binary_equal_zero(value_1.decimal[1])){
-        //когда делимое равно 0
-    } else if(double_decimal_binary_compare(value_1,value_2)==-1){
-        //когда делимое меньше делителя
-        partial_remainder = value_1;
+
+    }else if(double_decimal_binary_compare(value_1,value_2)==-1){
+        partial_reminder = value_1;
     }else{
         int left_bit_index_1 = find_first_bit(value_1.decimal[1]);
-        if(left_bit_index_1==-1){
+        if(left_bit_index_1 == - 1){
             left_bit_index_1 = find_first_bit(value_1.decimal[0]);
         }else{
-            left_bit_index_1 += 128;
+            left_bit_index_1+=128;
         }
         int left_bit_index_2 = find_first_bit(value_2.decimal[1]);
-        if(left_bit_index_2==-1){
+        if(left_bit_index_2 == - 1){
             left_bit_index_2 = find_first_bit(value_2.decimal[0]);
         }else{
-            left_bit_index_2 += 128;
+            left_bit_index_2+=128;
         }
         
+        
         int shift = left_bit_index_1 - left_bit_index_2;
-        shift_left_big(&value_2,shift);
+        double_decimal shifted_divisor = value_2;
+        shift_left_big(&shifted_divisor,shift);
         double_decimal divindend = value_1;
         int need_sub = 1;
-        
         while(shift>=0){
             if(need_sub){
-                partial_remainder = big_binary_sub(divindend,value_2);
+                printf("1 -> |%.8x||%.8x||%.8x||%.8x||%.8x||%.8x||%.8x||%.8x|\n",divindend.decimal[0].bits[0],
+                    divindend.decimal[0].bits[1],
+                    divindend.decimal[0].bits[2],
+                    divindend.decimal[0].bits[3],
+                    divindend.decimal[1].bits[0],
+                    divindend.decimal[1].bits[1],
+                    divindend.decimal[1].bits[2],
+                    divindend.decimal[1].bits[3]
+                );
+                printf("2 -> |%.8x||%.8x||%.8x||%.8x||%.8x||%.8x||%.8x||%.8x|\n",shifted_divisor.decimal[0].bits[0],
+                    shifted_divisor.decimal[0].bits[1],
+                    shifted_divisor.decimal[0].bits[2],
+                    shifted_divisor.decimal[0].bits[3],
+                    shifted_divisor.decimal[1].bits[0],
+                    shifted_divisor.decimal[1].bits[1],
+                    shifted_divisor.decimal[1].bits[2],
+                    shifted_divisor.decimal[1].bits[3]
+                );
+                partial_reminder = big_binary_sub(divindend,shifted_divisor);
+                printf("divindend -> |%.8x||%.8x||%.8x||%.8x||%.8x||%.8x||%.8x||%.8x|\n",partial_reminder.decimal[0].bits[0],
+                    partial_reminder.decimal[0].bits[1],
+                    partial_reminder.decimal[0].bits[2],
+                    partial_reminder.decimal[0].bits[3],
+                    partial_reminder.decimal[1].bits[0],
+                    partial_reminder.decimal[1].bits[1],
+                    partial_reminder.decimal[1].bits[2],
+                    partial_reminder.decimal[1].bits[3]
+                );
             }else{
-                partial_remainder = double_decimal_add(divindend,value_2);
+                partial_reminder = double_decimal_add(divindend,shifted_divisor);
             }
             shift_left_big(&quotient,1);
-            if(get_bit(partial_remainder.decimal[1],127)==0){
+            if(get_bit(partial_reminder.decimal[1],127)==0){
                 set_bit(&quotient.decimal[0],0,1);
             }
-            divindend = partial_remainder;
+            divindend = partial_reminder;
             shift_left_big(&divindend,1);
-            if(get_bit(partial_remainder.decimal[1],127)==0){
+            if(get_bit(partial_reminder.decimal[1],127)==0){
                 need_sub = 1;
             }else{
                 need_sub = 0;
             }
-            shift--; 
-            
+            shift--;
         }
-        if(get_bit(partial_remainder.decimal[1],127)){
-            partial_remainder = double_decimal_add(partial_remainder,value_2);
+        if(get_bit(partial_reminder.decimal[1],127)==1){
+            partial_reminder = double_decimal_add(partial_reminder,shifted_divisor);
         }
-        shift_right_big(&partial_remainder,left_bit_index_1-left_bit_index_2);
+        shift_right_big(&partial_reminder,left_bit_index_1-left_bit_index_2);
     }
     result = quotient;
     if(remainder!=NULL){
-        *remainder = partial_remainder;
+        *remainder = partial_reminder;
     }
-    
     return result;
-
 }
 
 double_decimal big_binary_sub(double_decimal value_1,double_decimal value_2){
@@ -175,14 +194,13 @@ double_decimal big_binary_sub(double_decimal value_1,double_decimal value_2){
 }
 
 s21_decimal s21_round_bank(s21_decimal integer, s21_decimal fractional){
-    s21_decimal zero_dot_five = {{0x5, 0x0, 0x0, 0x10000}};
+    s21_decimal zero_dot_five = {{0x5, 0x0, 0x0, 0x00010000}};
     s21_decimal result;
 
     if(s21_is_equal(fractional,zero_dot_five)){
         if(s21_decimal_even(integer)){
             result = integer;
         }else{
-            
             result = s21_decimal_add(integer,s21_decimal_get_one());
         }
     }else if(s21_is_greater(fractional,zero_dot_five)){

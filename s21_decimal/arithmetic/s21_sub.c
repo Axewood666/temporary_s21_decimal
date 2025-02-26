@@ -38,7 +38,9 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result){
     // printf("|%.8X| |%.8X| |%.8X| |%.8X|\n",value_1.bits[0],value_1.bits[1],value_1.bits[2],value_1.bits[3]);
     // printf("|%.8X| |%.8X| |%.8X| |%.8X|\n",value_2.bits[0],value_2.bits[1],value_2.bits[2],value_2.bits[3]);
     int status = ARITHMETIC_OK;
-    if(result){
+    if(!result || !is_correct_decimal(value_1) || !is_correct_decimal(value_2)){
+        status = 4;
+    }else{
         *result = create_zero_decimal();
         s21_decimal res = create_zero_decimal();
         int sign_1 = get_sign(value_1);

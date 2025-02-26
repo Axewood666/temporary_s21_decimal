@@ -1,5 +1,34 @@
 #include "helpers_test.h"
 
+START_TEST(test_add_manual1) {
+  // 7.922816251426433759354395034
+  s21_decimal num1 = {{0x9999999A, 0x99999999, 0x19999999, 0x1B0000}};
+  // 3.9614081257132168796771975168
+  s21_decimal num2 = {{0x0, 0x0, 0x80000000, 0x1C0000}};
+  // 11.884224377139650639031592551
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x66666667, 0x66666666, 0x26666666, 0x1B0000}};
+
+  ck_assert_int_eq(s21_add(num1, num2, &res1), 0);
+  comparison(res1, res2);
+
+  
+}
+
+START_TEST(test_div_manual2) {
+  // 2
+  s21_decimal num1 = {{0x2, 0x0, 0x0, 0x0}};
+  // 1.2640938749860586450804312205
+  s21_decimal num2 = {{0x1888888D, 0xBE250261, 0x28D856E6, 0x1C0000}};
+  // 1.5821609767882606564463392905
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x8B80B889, 0x20B8279E, 0x331F5430, 0x1C0000}};
+
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
+  comparison(res1, res2);
+}
+
+
 START_TEST(add_int_both_positive) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
@@ -415,11 +444,15 @@ START_TEST(div_not_int_one_positive) {
 }
 END_TEST
 
+
+
 Suite *test_arithmetic(void) {
   Suite *s = suite_create("Arithmetic test");
   TCase *tc = tcase_create("Tests");
+
   tcase_add_test(tc, add_int_both_positive);
-  
+  tcase_add_test(tc, test_add_manual1);
+  tcase_add_test(tc, test_div_manual2);
   tcase_add_test(tc, add_int_both_negative);
   tcase_add_test(tc, add_int_first_positive_second_negative);
   tcase_add_test(tc, add_int_first_negative_second_positive);

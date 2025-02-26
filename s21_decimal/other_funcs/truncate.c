@@ -12,11 +12,11 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
         *result = value;
       } else {
         s21_decimal temp = value;
-        set_scale(&temp, 0);
+        null_tech_bits(&temp);
         s21_decimal temp2 = {{0, 0, 0, 0}};
         s21_decimal ten = get_ten_pow(scale); 
         div_int(&temp, &ten, &temp2);
-        *result = temp;
+        *result = temp2;
         set_scale(result, 0);
         if (sign) {
           s21_negate(*result, result);

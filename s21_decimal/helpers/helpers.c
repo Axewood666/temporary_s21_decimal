@@ -1,6 +1,16 @@
 #include "helpers.h"
 
 
+
+int is_correct_decimal(s21_decimal value){
+    int status = 1;
+    int scale  = get_scale(value);
+    if(scale>28 || scale < 0){
+        status = 0;
+    }
+    return status;
+}
+
 s21_decimal create_zero_decimal(){
     s21_decimal value;
     clear_decimal(&value);
@@ -23,6 +33,9 @@ void null_tech_bits(s21_decimal *value){
 int get_sign(s21_decimal value) { return (value.bits[3] & SIGN_MASK) != 0; }
 int get_scale(s21_decimal value) { return (value.bits[3] & SCALE_MASK) >> 16; }
 
+int check_bits(s21_decimal value){
+    return (value.bits[3] & CHECK_MASK) == 0;
+}
 void set_scale(s21_decimal *value, int scale) {
     value->bits[3] &= ~SCALE_MASK;  
     value->bits[3] |= (scale << 16);  
@@ -49,12 +62,9 @@ s21_decimal mul_by_ten(s21_decimal value){
     for(int i = 0;i<3;i++){
         shift_left(&temp_1);
     }
-    
     shift_left(&temp_2);
-
     double_decimal temp_3 = double_decimal_add(create_double_decimal_from_decimal(temp_1),create_double_decimal_from_decimal(temp_2));
     return temp_3.decimal[0];
-    
 }
 
 s21_decimal get_ten_pow(int number){
@@ -143,30 +153,88 @@ void shift_right_big(double_decimal *value,int count){
 
 }
 
-
+int s21_set_bit(int number, int index) {
+    return number | (1U << index);
+}
+int s21_is_set_bit(int number, int index) {
+    return !!(number & (1U << index));
+}
 
 void shift_left(s21_decimal *value) {
-    int last_bits[3] = {get_bit(*value, 31), get_bit(*value, 63), get_bit(*value, 95)};
-    for (int i = 3; i >= 0; i--) {
-        value->bits[i] <<= 1;
-        if (i > 0 && last_bits[i - 1]) {
-            value->bits[i] |= 1;
-        }
+    s21_decimal decimal = *value;
+    s21_decimal result = create_zero_decimal();
+
+    int b0 = s21_is_set_bit(decimal.bits[0], 32 - 1);
+    unsigned int result0 = decimal.bits[0];
+    result0 = result0 << 1;
+    result.bits[0] = result0;
+
+    int b1 = s21_is_set_bit(decimal.bits[1], 32 - 1);
+    unsigned int result1 = decimal.bits[1];
+    result1 = result1 << 1;
+    result.bits[1] = result1;
+
+    int b2 = s21_is_set_bit(decimal.bits[2], 32 - 1);
+    unsigned int result2 = decimal.bits[2];
+    result2 = result2 << 1;
+    result.bits[2] = result2;
+
+    unsigned int result3 = decimal.bits[3];
+    result3 = result3 << 1;
+    result.bits[3] = result3;
+
+    if (b0) {
+        result.bits[1] = s21_set_bit(result.bits[1], 0);
     }
 
-    set_bit(value, 32, last_bits[0]);
-    set_bit(value, 64, last_bits[1]);
-    set_bit(value, 96, last_bits[2]);
+    if (b1) {
+        result.bits[2] = s21_set_bit(result.bits[2], 0);
+    }
+
+    if (b2) {
+        result.bits[3] = s21_set_bit(result.bits[3], 0);
+    }
+
+    *value = result;
 }
 
 void shift_right(s21_decimal *value) {
-// тут храниться последние биты 1 и 2 bits
-int last_bits[2] = {get_bit(*value, 32), get_bit(*value, 64)};
-for (int i = 2; i >= 0; i--) {
-    value->bits[i] = value->bits[i] >> 1;
-}
-set_bit(value, 63, last_bits[1]);
-set_bit(value, 31, last_bits[0]);
+    s21_decimal decimal = *value;
+    s21_decimal result = create_zero_decimal();
+
+    int b3 = s21_is_set_bit(decimal.bits[3], 0);
+    unsigned int result3 = decimal.bits[3];
+    result3 = result3 >> 1;
+    result.bits[3] = result3;
+
+    int b2 = s21_is_set_bit(decimal.bits[2], 0);
+    unsigned int result2 = decimal.bits[2];
+    result2 = result2 >> 1;
+    result.bits[2] = result2;
+
+    int b1 = s21_is_set_bit(decimal.bits[1], 0);
+    unsigned int result1 = decimal.bits[1];
+    result1 = result1 >> 1;
+    result.bits[1] = result1;
+
+    unsigned int result0 = decimal.bits[0];
+    result0 = result0 >> 1;
+    result.bits[0] = result0;
+
+    if (b3) {
+        result.bits[2] = s21_set_bit(result.bits[2], 32 - 1);
+    }
+
+    if (b2) {
+        result.bits[1] = s21_set_bit(result.bits[1], 32 - 1);
+    }
+
+    if (b1) {
+        result.bits[0] = s21_set_bit(result.bits[0], 32 - 1);
+    }
+
+    *value = result;
+    
 }
 
 

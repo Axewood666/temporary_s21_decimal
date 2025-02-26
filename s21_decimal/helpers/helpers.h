@@ -5,11 +5,12 @@
 
 #define SIGN_MASK 0x80000000
 #define SCALE_MASK 0x00ff0000
-
+#define CHECK_MASK 0x7F00FFFF
 typedef struct s21_decimal s21_decimal;
 typedef struct double_decimal double_decimal;
 
-
+int check_bits(s21_decimal value);
+int is_correct_decimal(s21_decimal value);
 s21_decimal create_zero_decimal();
 void clear_decimal(s21_decimal *value);
 void null_tech_bits(s21_decimal *value);

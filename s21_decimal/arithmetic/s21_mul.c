@@ -37,8 +37,11 @@ int auxiliary_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result)
         double_decimal powerten = create_double_decimal_from_decimal(get_ten_pow(shift));
         res = double_decimal_binary_division(res,powerten,&remainder);
         set_scale(&remainder.decimal[0],shift);
+        
         res.decimal[0] = s21_round_bank(res.decimal[0],remainder.decimal[0]);
+        
         set_scale(&res.decimal[0], res_scale);
+
         if(!s21_decimal_binary_equal_zero(res.decimal[1])){
             status = ARITHMETIC_BIG;
         }else{
@@ -53,7 +56,9 @@ int auxiliary_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result)
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result){
     
     int status = ARITHMETIC_OK;
-    if(result){
+    if(!result || !is_correct_decimal(value_1) || !is_correct_decimal(value_2)){
+        status = 4;
+    }else {
         *result = create_zero_decimal();
         s21_decimal res = create_zero_decimal();
         int sign_1 = get_sign(value_1);
