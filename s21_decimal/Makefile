@@ -23,7 +23,7 @@ test_files=$(test_dir)/arithmetic_tests.c $(test_dir)/comparison_tests.c \
 	$(test_dir)/conversion_tests.c $(test_dir)/other_funcs_tests.c \
 	$(test_dir)/helpers_test.c
 TEST_OBJS := $(test_files:.c=.o)
-files_for_report=*.gcno *.gcda */*.gcno */*.gcda test_with_gcov s21_string_gcov.a
+files_for_report=*.gcno *.gcda */*.gcno */*.gcda test_with_gcov s21_decimal_gcov.a
 
 OS_NAME:=$(shell uname -s)
 ifeq ($(OS_NAME), Linux)
@@ -35,13 +35,9 @@ endif
 
 
 #standart
-#rebuild: clean all
-#temp goal
-all: $(OBJS)
-	@$(cc) $(flags) $(OBJS) -o temp
-	@./temp
+rebuild: clean all
 
-#all: test gcov_report
+all: test gcov_report
 
 clean:
 	rm -f $(OBJS) $(TEST_OBJS) $(DEBUG_OBJS) *.a $(files_for_report) $(GCOV_OBJS) 
@@ -76,13 +72,13 @@ test_valgrind: $(lib_name) $(TEST_OBJS)
 #-------------
 
 #gcov reports
-gcov: s21_string_gcov.a $(TEST_OBJS)
-	$(cc) $(flags) $(gcov_flags)  $(test_dir)/test_runner.c $(TEST_OBJS) s21_string_gcov.a $(check_flags) -o test_with_gcov
+gcov: s21_decimal_gcov.a $(TEST_OBJS)
+	$(cc) $(flags) $(gcov_flags)  $(test_dir)/test_runner.c $(TEST_OBJS) s21_decimal_gcov.a $(check_flags) -o test_with_gcov
 	./test_with_gcov
 	rm test_with_gcov
 
-s21_string_gcov.a: $(GCOV_OBJS)
-	ar rc s21_string_gcov.a $(GCOV_OBJS)
+s21_decimal_gcov.a: $(GCOV_OBJS)
+	ar rc s21_decimal_gcov.a $(GCOV_OBJS)
 	rm -f $(GCOV_OBJS)
  
 gcov_report: gcov

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "helpers/helpers.h"
 
 #define ARITHMETIC_OK 0
@@ -13,13 +14,14 @@
 #define ARITHMETIC_ZERO_DIV 3
 #define TRUE 1
 #define FALSE 0
+#define BITS_COUNT 96
 
 typedef struct s21_decimal {
-    int bits[4];
+  int bits[4];
 } s21_decimal;
 
 typedef struct double_decimal {
-    s21_decimal decimal[2];
+  s21_decimal decimal[2];
 } double_decimal;
 
 int s21_is_equal(s21_decimal first, s21_decimal second);
