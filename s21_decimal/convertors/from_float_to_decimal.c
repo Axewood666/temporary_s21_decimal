@@ -1,45 +1,71 @@
 #include "../s21_decimal.h"
 
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-    int status = 1;
-    if (dst && (getFloatExp(&src) < 96)) {
-      char s_number[32];
-      int scale = 0;
-      sprintf(s_number, "%E", src);
-      strtok(s_number, ".");
-      strcat(s_number, strtok(NULL, "."));
-      char *s_mantissa_with_zeros = strtok(s_number, "E");
-      char *s_scale = strtok(NULL, "E");
-      int e_scale = atoi(s_scale);
-      int zero_count = 0;
-      for (int i = strlen(s_mantissa_with_zeros) - 1; i > 0; i--) {
-        if (s_mantissa_with_zeros[i] == '0') {
-          zero_count++;
-        }
-      }
-      int number_count = strlen(s_mantissa_with_zeros) - zero_count;
-      if (e_scale > 0) {
-        scale = 6 - zero_count - e_scale;
-      } else {
-        scale = number_count - 1 - e_scale;
-      }
-      if (scale <= 28) {
-        char s_mantissa[number_count + 1];
-        strncpy(s_mantissa, s_mantissa_with_zeros, number_count);
-        s_mantissa[number_count] = '\0';
-        int mantissa = atoi(s_mantissa);
-        if (scale < 0) {
-          mantissa *= pow(10, -scale);
-          scale = 0;
-        }
-        set_scale(dst, scale);
-        if (src < 0) {
-          set_sign(dst, 1);
-          mantissa *= -1;
-        }
-        dst->bits[0] = mantissa;
-        status = 0;
+  if (dst == NULL || isnan(src) || isinf(src) || fabs(src) > MAX_DECIMAL ||
+      (fabs(src) != 0 && fabs(src) < MIN_DECIMAL)) {
+    return 1;
+  }
+  *dst = create_zero_decimal();
+
+  if (src != 0.0f) {
+    char s_number[32];
+    sprintf(s_number, "%E", fabs(src));
+
+    char *e_pos = strchr(s_number, 'E');
+
+    int mantissa_len = e_pos - s_number;
+    char mantissa_str[32] = {0};
+    int j = 0;
+
+    for (int i = 0; i < mantissa_len; i++) {
+      if (s_number[i] != '.') {
+        mantissa_str[j++] = s_number[i];
       }
     }
-    return status;
+
+    int zero_count = 0;
+    for (int i = strlen(mantissa_str) - 1; i > 0 && mantissa_str[i] == '0';
+         i--) {
+      zero_count++;
+      mantissa_str[i] = '\0';
+    }
+
+    int e_scale = atoi(e_pos + 1);
+    int scale = 6 - e_scale - zero_count;
+
+    s21_decimal tmp = create_zero_decimal();
+    s21_decimal ten = create_zero_decimal();
+    ten.bits[0] = 10;
+
+    for (int i = 0; mantissa_str[i] != '\0'; i++) {
+      s21_mul(tmp, ten, &tmp);
+
+      s21_decimal digit = create_zero_decimal();
+      digit.bits[0] = mantissa_str[i] - '0';
+      s21_add(tmp, digit, &tmp);
+    }
+
+    if (scale < 0) {
+      for (int i = 0; i < -scale; i++) {
+        s21_mul(tmp, ten, &tmp);
+      }
+      scale = 0;
+    } else if (scale > 28) {
+      s21_decimal ten = create_zero_decimal();
+      ten.bits[0] = 10;
+
+      for (int i = 0; i < scale - 28; i++) {
+        s21_div(tmp, ten, &tmp);
+      }
+      scale = 28;
+    }
+
+    *dst = tmp;
+    set_scale(dst, scale);
+    if (src < 0) {
+      set_sign(dst, 1);
+    }
   }
+
+  return 0;
+}
