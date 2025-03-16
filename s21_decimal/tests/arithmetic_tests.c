@@ -11,8 +11,6 @@ START_TEST(test_add_manual1) {
 
   ck_assert_int_eq(s21_add(num1, num2, &res1), 0);
   comparison(res1, res2);
-
-  
 }
 
 START_TEST(test_div_manual2) {
@@ -27,7 +25,6 @@ START_TEST(test_div_manual2) {
   ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
   comparison(res1, res2);
 }
-
 
 START_TEST(add_int_both_positive) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
@@ -120,7 +117,7 @@ END_TEST
 START_TEST(add_too_large_first_max) {
   s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}};
   s21_decimal num2 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00010000}};
-  
+
   s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
   ck_assert_int_eq(s21_add(num1, num2, &res1), 1);
 }
@@ -443,8 +440,6 @@ START_TEST(div_not_int_one_positive) {
   comparison(res1, res2);
 }
 END_TEST
-
-
 
 Suite *test_arithmetic(void) {
   Suite *s = suite_create("Arithmetic test");

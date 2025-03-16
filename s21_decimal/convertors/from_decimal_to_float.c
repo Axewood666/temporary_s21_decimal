@@ -1,9 +1,7 @@
 #include "../s21_decimal.h"
 
-int s21_from_decimal_to_float(s21_decimal src, float *dst)
-{
-  if (!dst)
-  {
+int s21_from_decimal_to_float(s21_decimal src, float *dst) {
+  if (!dst) {
     return 1;
   }
 
@@ -12,10 +10,8 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst)
   double tmp = 0.0;
   *dst = 0.0;
 
-  for (int i = 0; i < BITS_COUNT; i++)
-  {
-    if (get_bit(src, i))
-    {
+  for (int i = 0; i < BITS_COUNT; i++) {
+    if (get_bit(src, i)) {
       tmp += pow(2, i);
     }
   }

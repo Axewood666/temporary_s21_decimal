@@ -3,7 +3,7 @@
 void align_scales(s21_decimal value_1, s21_decimal value_2,
                   double_decimal *value_1d, double_decimal *value_2d) {
   if (!value_1d || !value_2d) {
-    return; 
+    return;
   }
 
   int scale_1 = get_scale(value_1);
@@ -25,7 +25,8 @@ void align_scales(s21_decimal value_1, s21_decimal value_2,
 }
 
 double_decimal binary_mul_big(double_decimal value_1, s21_decimal value_2) {
-  double_decimal result = create_double_decimal_from_decimal(create_zero_decimal());
+  double_decimal result =
+      create_double_decimal_from_decimal(create_zero_decimal());
   double_decimal temp = value_1;
 
   int first_bit_index = find_first_bit(value_2);
@@ -41,8 +42,10 @@ double_decimal binary_mul_big(double_decimal value_1, s21_decimal value_2) {
   return result;
 }
 
-double_decimal double_decimal_add(double_decimal value_1, double_decimal value_2) {
-  double_decimal result = create_double_decimal_from_decimal(create_zero_decimal());
+double_decimal double_decimal_add(double_decimal value_1,
+                                  double_decimal value_2) {
+  double_decimal result =
+      create_double_decimal_from_decimal(create_zero_decimal());
   int carry = 0;
 
   for (int i = 0; i < 256; i++) {
@@ -76,11 +79,14 @@ int get_shift_to_decimal(double_decimal value) {
 
   if (!(s21_decimal_binary_equal_zero(value.decimal[0]) &&
         s21_decimal_binary_equal_zero(value.decimal[1]))) {
-    double_decimal max_number = create_double_decimal_from_decimal(s21_decimal_get_max());
-    double_decimal quotient = double_decimal_binary_division(value, max_number, NULL);
+    double_decimal max_number =
+        create_double_decimal_from_decimal(s21_decimal_get_max());
+    double_decimal quotient =
+        double_decimal_binary_division(value, max_number, NULL);
 
     while (1) {
-      int compare = s21_decimal_binary_compare(quotient.decimal[0], get_ten_pow(pow));
+      int compare =
+          s21_decimal_binary_compare(quotient.decimal[0], get_ten_pow(pow));
       if (compare <= 0) {
         break;
       }
@@ -100,16 +106,18 @@ int get_shift_to_decimal(double_decimal value) {
 }
 
 double_decimal double_decimal_binary_division(double_decimal value_1,
-                                           double_decimal value_2,
-                                           double_decimal *remainder) {
+                                              double_decimal value_2,
+                                              double_decimal *remainder) {
   if (s21_decimal_binary_equal_zero(value_2.decimal[0]) &&
       s21_decimal_binary_equal_zero(value_2.decimal[1])) {
     return create_double_decimal_from_decimal(create_zero_decimal());
   }
 
   double_decimal result;
-  double_decimal partial_reminder = create_double_decimal_from_decimal(create_zero_decimal());
-  double_decimal quotient = create_double_decimal_from_decimal(create_zero_decimal());
+  double_decimal partial_reminder =
+      create_double_decimal_from_decimal(create_zero_decimal());
+  double_decimal quotient =
+      create_double_decimal_from_decimal(create_zero_decimal());
 
   if (s21_decimal_binary_equal_zero(value_1.decimal[0]) &&
       s21_decimal_binary_equal_zero(value_1.decimal[1])) {
@@ -174,7 +182,8 @@ double_decimal big_binary_sub(double_decimal value_1, double_decimal value_2) {
   double_decimal result;
   value_2.decimal[0] = decimal_binary_not(value_2.decimal[0]);
   value_2.decimal[1] = decimal_binary_not(value_2.decimal[1]);
-  double_decimal one = create_double_decimal_from_decimal(s21_decimal_get_one());
+  double_decimal one =
+      create_double_decimal_from_decimal(s21_decimal_get_one());
 
   value_2 = double_decimal_add(value_2, one);
   result = double_decimal_add(value_1, value_2);
@@ -187,17 +196,21 @@ s21_decimal s21_round_bank(s21_decimal integer, s21_decimal fractional) {
   s21_decimal result;
 
   if (s21_is_equal(fractional, zero_dot_five)) {
-    result = s21_decimal_even(integer) ? integer : s21_decimal_add(integer, s21_decimal_get_one());
+    result = s21_decimal_even(integer)
+                 ? integer
+                 : s21_decimal_add(integer, s21_decimal_get_one());
   } else {
-    result = s21_is_greater(fractional, zero_dot_five) ? 
-             s21_decimal_add(integer, s21_decimal_get_one()) : integer;
+    result = s21_is_greater(fractional, zero_dot_five)
+                 ? s21_decimal_add(integer, s21_decimal_get_one())
+                 : integer;
   }
 
   return result;
 }
 
 double_decimal decimal_binay_mul(s21_decimal value_1, s21_decimal value_2) {
-  double_decimal result = create_double_decimal_from_decimal(create_zero_decimal());
+  double_decimal result =
+      create_double_decimal_from_decimal(create_zero_decimal());
   double_decimal temp = create_double_decimal_from_decimal(value_1);
   int first_bit = find_first_bit(value_2);
 

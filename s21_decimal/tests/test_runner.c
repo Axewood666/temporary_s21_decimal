@@ -1,7 +1,6 @@
 #include "test_runner.h"
 
 int main(void) {
-  
   int i = 0;
   int fail_count = 0;
   Suite *test_functions[] = {TEST_FUNCS, NULL};
