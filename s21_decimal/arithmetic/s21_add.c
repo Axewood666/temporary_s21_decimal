@@ -43,34 +43,33 @@ int auxiliary_addition(s21_decimal value_1, s21_decimal value_2,
 }
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  int status = ARITHMETIC_OK;
-
-  if (!result || !is_correct_decimal(value_1) || !is_correct_decimal(value_2)) {
-    status = 4;
-  } else {
-    *result = create_zero_decimal();
-    s21_decimal res = create_zero_decimal();
-    int sign_1 = get_sign(value_1);
-    int sign_2 = get_sign(value_2);
-
-    if (sign_1 == 0 && sign_2 == 0) {
-      status = auxiliary_addition(value_1, value_2, &res);
-    } else if (sign_1 == 0 && sign_2 == 1) {
-      status = s21_sub(value_1, s21_decimal_abs(value_2), &res);
-    } else if (sign_1 == 1 && sign_2 == 0) {
-      status = s21_sub(s21_decimal_abs(value_1), value_2, &res);
-      s21_negate(res, &res);
-    } else if (sign_1 == 1 && sign_2 == 1) {
-      status = auxiliary_addition(s21_decimal_abs(value_1),
-                                  s21_decimal_abs(value_2), &res);
-      s21_negate(res, &res);
-    }
-
-    if (get_sign(res) == 1 && status == ARITHMETIC_BIG) {
-      status = ARITHMETIC_SMALL;
-    }
-    *result = res;
+  if (!result || !is_correct_scale(value_1) || !is_correct_scale(value_2)) {
+    return 4;
   }
+
+  int status = ARITHMETIC_OK;
+  *result = create_zero_decimal();
+  s21_decimal res = create_zero_decimal();
+  int sign_1 = get_sign(value_1);
+  int sign_2 = get_sign(value_2);
+
+  if (sign_1 == 0 && sign_2 == 0) {
+    status = auxiliary_addition(value_1, value_2, &res);
+  } else if (sign_1 == 1 && sign_2 == 1) {
+    status = auxiliary_addition(s21_decimal_abs(value_1),
+                                s21_decimal_abs(value_2), &res);
+    s21_negate(res, &res);
+  } else if (sign_1 == 0) {
+    status = s21_sub(value_1, s21_decimal_abs(value_2), &res);
+  } else if (sign_1 == 1) {
+    status = s21_sub(s21_decimal_abs(value_1), value_2, &res);
+    s21_negate(res, &res);
+  }
+
+  if (get_sign(res) == 1 && status == ARITHMETIC_BIG) {
+    status = ARITHMETIC_SMALL;
+  }
+  *result = res;
 
   return status;
 }

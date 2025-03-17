@@ -58,36 +58,35 @@ int auxiliary_div(double_decimal value_2d, double_decimal res,
 }
 
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  int status = ARITHMETIC_OK;
-
-  if (!result || !is_correct_decimal(value_1) || !is_correct_decimal(value_2)) {
-    status = 4;
+  if (!result || !is_correct_scale(value_1) || !is_correct_scale(value_2)) {
+    return 4;
   } else if (s21_is_equal(value_2, create_zero_decimal())) {
-    status = ARITHMETIC_ZERO_DIV;
+    return ARITHMETIC_ZERO_DIV;
+  }
+
+  int status = ARITHMETIC_OK;
+  *result = create_zero_decimal();
+  int sign_1 = get_sign(value_1);
+  int sign_2 = get_sign(value_2);
+
+  double_decimal value_1d, value_2d;
+  align_scales(value_1, value_2, &value_1d, &value_2d);
+
+  double_decimal remainder =
+      create_double_decimal_from_decimal(create_zero_decimal());
+  double_decimal res =
+      double_decimal_binary_division(value_1d, value_2d, &remainder);
+
+  if (res.decimal[0].bits[3] != 0 ||
+      !s21_decimal_binary_equal_zero(res.decimal[1])) {
+    status = (sign_1 != sign_2) ? ARITHMETIC_SMALL : ARITHMETIC_BIG;
   } else {
-    *result = create_zero_decimal();
-    int sign_1 = get_sign(value_1);
-    int sign_2 = get_sign(value_2);
-
-    double_decimal value_1d, value_2d;
-    align_scales(value_1, value_2, &value_1d, &value_2d);
-
-    double_decimal remainder =
-        create_double_decimal_from_decimal(create_zero_decimal());
-    double_decimal res =
-        double_decimal_binary_division(value_1d, value_2d, &remainder);
-
-    if (res.decimal[0].bits[3] != 0 ||
-        !s21_decimal_binary_equal_zero(res.decimal[1])) {
-      status = (sign_1 != sign_2) ? ARITHMETIC_SMALL : ARITHMETIC_BIG;
-    } else {
-      status = auxiliary_div(value_2d, res, remainder, result);
-      if (sign_1 != sign_2) {
-        set_sign(result, 1);
-      }
-      if (get_sign(*result) == 1 && status == ARITHMETIC_BIG) {
-        status = ARITHMETIC_SMALL;
-      }
+    status = auxiliary_div(value_2d, res, remainder, result);
+    if (sign_1 != sign_2) {
+      set_sign(result, 1);
+    }
+    if (get_sign(*result) == 1 && status == ARITHMETIC_BIG) {
+      status = ARITHMETIC_SMALL;
     }
   }
 

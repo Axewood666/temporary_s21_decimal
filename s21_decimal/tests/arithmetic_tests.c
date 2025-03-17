@@ -139,6 +139,39 @@ START_TEST(add_zero_scale_negative_first_value) {
 }
 END_TEST
 
+START_TEST(add_null_decimal) {
+  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
+  s21_decimal num2 = {{0x00000001, 0x00000000, 0x00000000, 0x80000000}};
+  ck_assert_int_eq(s21_add(num1, num2, NULL), 4);
+}
+END_TEST
+
+START_TEST(add_first_not_correct) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x00550000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_add(num1, num2, &res), 4);
+}
+END_TEST
+
+START_TEST(add_second_not_correct) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00550000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_add(num1, num2, &res), 4);
+}
+END_TEST
+
+START_TEST(add_not_int_big_difference_scale) {
+  s21_decimal num1 = {{0x00000001, 0x00000000, 0x00000000, 0x001C0000}};
+  s21_decimal num2 = {{0x00000001, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x10000001, 0x3E250261, 0x204FCE5E, 0x001C0000}};
+  ck_assert_int_eq(s21_add(num1, num2, &res1), 0);
+  comparison(res1, res2);
+}
+END_TEST
+
 START_TEST(sub_int_both_positive) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
@@ -441,6 +474,29 @@ START_TEST(div_not_int_one_positive) {
 }
 END_TEST
 
+START_TEST(div_null_decimal) {
+  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
+  s21_decimal num2 = {{0x00000001, 0x00000000, 0x00000000, 0x80000000}};
+  ck_assert_int_eq(s21_div(num1, num2, NULL), 4);
+}
+END_TEST
+
+START_TEST(div_first_not_correct) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x00550000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res), 4);
+}
+END_TEST
+
+START_TEST(div_second_not_correct) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00550000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res), 4);
+}
+END_TEST
+
 Suite *test_arithmetic(void) {
   Suite *s = suite_create("Arithmetic test");
   TCase *tc = tcase_create("Tests");
@@ -454,11 +510,15 @@ Suite *test_arithmetic(void) {
   tcase_add_test(tc, add_not_int_both_positive);
   tcase_add_test(tc, add_not_int_both_negative);
   tcase_add_test(tc, add_not_int_first_positive_second_negative);
-  // tcase_add_test(tc, add_not_int_first_negative_second_positive);
+  tcase_add_test(tc, add_not_int_first_negative_second_positive);
   tcase_add_test(tc, add_too_large_both_max);
   tcase_add_test(tc, add_too_large_first_max);
   tcase_add_test(tc, add_too_large_second_max);
   tcase_add_test(tc, add_zero_scale_negative_first_value);
+  tcase_add_test(tc, add_null_decimal);
+  tcase_add_test(tc, add_first_not_correct);
+  tcase_add_test(tc, add_second_not_correct);
+  tcase_add_test(tc, add_not_int_big_difference_scale);
 
   tcase_add_test(tc, sub_int_both_positive);
   tcase_add_test(tc, sub_int_both_negative);
@@ -492,6 +552,9 @@ Suite *test_arithmetic(void) {
   tcase_add_test(tc, div_by_zero);
   tcase_add_test(tc, div_not_int_both_positive);
   tcase_add_test(tc, div_not_int_one_positive);
+  tcase_add_test(tc, div_null_decimal);
+  tcase_add_test(tc, div_first_not_correct);
+  tcase_add_test(tc, div_second_not_correct);
 
   suite_add_tcase(s, tc);
   return s;

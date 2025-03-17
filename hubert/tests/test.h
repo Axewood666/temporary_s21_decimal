@@ -93,10 +93,12 @@ void test_sub(s21_decimal decimal1, s21_decimal decimal2, s21_decimal check);
 void test_sub_fail(s21_decimal decimal1, s21_decimal decimal2, int check);
 void test_mul(s21_decimal decimal1, s21_decimal decimal2, s21_decimal check);
 void test_mul_fail1(s21_decimal decimal1, s21_decimal decimal2, int code_check);
-void test_mul_fail2(s21_decimal decimal1, s21_decimal decimal2, s21_decimal decimal_check, int code_check);
+void test_mul_fail2(s21_decimal decimal1, s21_decimal decimal2,
+                    s21_decimal decimal_check, int code_check);
 void test_div(s21_decimal decimal1, s21_decimal decimal2, s21_decimal check);
 void test_div_fail1(s21_decimal decimal1, s21_decimal decimal2, int code_check);
-void test_div_fail2(s21_decimal decimal1, s21_decimal decimal2, s21_decimal decimal_check, int code_check);
+void test_div_fail2(s21_decimal decimal1, s21_decimal decimal2,
+                    s21_decimal decimal_check, int code_check);
 void test_mod(s21_decimal decimal1, s21_decimal decimal2, s21_decimal check);
 void test_mod_fail(s21_decimal decimal1, s21_decimal decimal2, int code_check);
 
@@ -207,9 +209,11 @@ Suite *is_not_equal_suite16(void);
 
 void test_is_less(s21_decimal decimal1, s21_decimal decimal2, int check);
 void test_is_equal(s21_decimal decimal1, s21_decimal decimal2, int check);
-void test_is_less_or_equal(s21_decimal decimal1, s21_decimal decimal2, int check);
+void test_is_less_or_equal(s21_decimal decimal1, s21_decimal decimal2,
+                           int check);
 void test_is_greater(s21_decimal decimal1, s21_decimal decimal2, int check);
-void test_is_greater_or_equal(s21_decimal decimal1, s21_decimal decimal2, int check);
+void test_is_greater_or_equal(s21_decimal decimal1, s21_decimal decimal2,
+                              int check);
 void test_is_not_equal(s21_decimal decimal1, s21_decimal decimal2, int check);
 
 #define TEST_CONVERSION_OK 0
@@ -248,14 +252,14 @@ void test_from_decimal_to_int_fail(s21_decimal decimal);
 void test_from_decimal_to_float(s21_decimal decimal, int check);
 
 typedef union float_cast_test {
-    float f;
-    struct {
-        uint32_t mantisa : 23;
-        uint32_t exponent : 8;
-        uint32_t sign : 1;
-    } parts;
-    uint32_t bytes;
-    int int32_bytes;
+  float f;
+  struct {
+    uint32_t mantisa : 23;
+    uint32_t exponent : 8;
+    uint32_t sign : 1;
+  } parts;
+  uint32_t bytes;
+  int int32_bytes;
 } float_cast_test;
 
 #define TEST_OTHER_OK 0
@@ -299,7 +303,7 @@ void test_debug(s21_decimal decimal, char *check);
 int s21_random_int(int min, int max);
 int test_decimal_get_sign(s21_decimal value);
 int test_decimal_get_power(s21_decimal value);
-int test_is_correct_decimal(s21_decimal decimal);
+int test_is_correct_scale(s21_decimal decimal);
 int test_decimal_is_full_equal(s21_decimal value_1, s21_decimal value_2);
 
 #endif  // SRC_TESTS_TEST_H_

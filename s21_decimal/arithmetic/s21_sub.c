@@ -37,7 +37,7 @@ int auxiliary_sub(s21_decimal value_1, s21_decimal value_2,
 
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int status = ARITHMETIC_OK;
-  if (!result || !is_correct_decimal(value_1) || !is_correct_decimal(value_2)) {
+  if (!result || !is_correct_scale(value_1) || !is_correct_scale(value_2)) {
     status = 4;
   } else {
     *result = create_zero_decimal();

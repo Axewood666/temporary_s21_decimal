@@ -4,7 +4,8 @@
 #include "./other.h"
 
 /**
- * @brief Округляет value до ближайшего целого числа в сторону отрицательной бесконечности.
+ * @brief Округляет value до ближайшего целого числа в сторону отрицательной
+ * бесконечности.
  *
  * @param value округляемое число
  * @param result указатель, куда будет записан результат
@@ -13,39 +14,42 @@
  *      1 - ошибка вычисления
  */
 int s21_floor(s21_decimal value, s21_decimal *result) {
-    s21_other_result code = S21_OTHER_OK;
+  s21_other_result code = S21_OTHER_OK;
 
-    if (!result) {
-        // Если указатель на decimal является NULL
-        code = S21_OTHER_ERROR;
-    } else if (!s21_is_correct_decimal(value)) {
-        // Проверяем, что value является корректными decimal
-        code = S21_OTHER_ERROR;
-        *result = s21_decimal_get_inf();
-    } else {
-        // В остальных случаях округляем
-        *result = s21_decimal_get_zero();
-        int sign = s21_decimal_get_sign(value);
-        s21_decimal fractional;
-        s21_decimal value_unsigned_truncated;
-        // Убираем знак
-        s21_decimal value_unsigned = s21_abs(value);
+  if (!result) {
+    // Если указатель на decimal является NULL
+    code = S21_OTHER_ERROR;
+  } else if (!s21_is_correct_scale(value)) {
+    // Проверяем, что value является корректными decimal
+    code = S21_OTHER_ERROR;
+    *result = s21_decimal_get_inf();
+  } else {
+    // В остальных случаях округляем
+    *result = s21_decimal_get_zero();
+    int sign = s21_decimal_get_sign(value);
+    s21_decimal fractional;
+    s21_decimal value_unsigned_truncated;
+    // Убираем знак
+    s21_decimal value_unsigned = s21_abs(value);
 
-        // Убираем дробную часть числа
-        s21_truncate(value_unsigned, &value_unsigned_truncated);
+    // Убираем дробную часть числа
+    s21_truncate(value_unsigned, &value_unsigned_truncated);
 
-        // Считаем убранную дробную часть числа
-        s21_sub(value_unsigned, value_unsigned_truncated, &fractional);
+    // Считаем убранную дробную часть числа
+    s21_sub(value_unsigned, value_unsigned_truncated, &fractional);
 
-        // Если дробная часть была больше нуля и число было отрицательным, то прибавляем 1
-        if (sign == S21_NEGATIVE && s21_is_greater(fractional, s21_decimal_get_zero())) {
-            s21_add(value_unsigned_truncated, s21_decimal_get_one(), &value_unsigned_truncated);
-        }
-
-        *result = value_unsigned_truncated;
-        // Возвращаем знак
-        s21_decimal_set_sign(result, sign);
+    // Если дробная часть была больше нуля и число было отрицательным, то
+    // прибавляем 1
+    if (sign == S21_NEGATIVE &&
+        s21_is_greater(fractional, s21_decimal_get_zero())) {
+      s21_add(value_unsigned_truncated, s21_decimal_get_one(),
+              &value_unsigned_truncated);
     }
 
-    return code;
+    *result = value_unsigned_truncated;
+    // Возвращаем знак
+    s21_decimal_set_sign(result, sign);
+  }
+
+  return code;
 }

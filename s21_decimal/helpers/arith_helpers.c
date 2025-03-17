@@ -112,13 +112,11 @@ double_decimal double_decimal_binary_division(double_decimal value_1,
       s21_decimal_binary_equal_zero(value_2.decimal[1])) {
     return create_double_decimal_from_decimal(create_zero_decimal());
   }
-
   double_decimal result;
   double_decimal partial_reminder =
       create_double_decimal_from_decimal(create_zero_decimal());
   double_decimal quotient =
       create_double_decimal_from_decimal(create_zero_decimal());
-
   if (s21_decimal_binary_equal_zero(value_1.decimal[0]) &&
       s21_decimal_binary_equal_zero(value_1.decimal[1])) {
     result = quotient;
@@ -132,49 +130,41 @@ double_decimal double_decimal_binary_division(double_decimal value_1,
     } else {
       left_bit_index_1 += 128;
     }
-
     int left_bit_index_2 = find_first_bit(value_2.decimal[1]);
     if (left_bit_index_2 == -1) {
       left_bit_index_2 = find_first_bit(value_2.decimal[0]);
     } else {
       left_bit_index_2 += 128;
     }
-
     int shift = left_bit_index_1 - left_bit_index_2;
     double_decimal shifted_divisor = value_2;
     shift_left_big(&shifted_divisor, shift);
     double_decimal divindend = value_1;
     int need_sub = 1;
-
     while (shift >= 0) {
       if (need_sub) {
         partial_reminder = big_binary_sub(divindend, shifted_divisor);
       } else {
         partial_reminder = double_decimal_add(divindend, shifted_divisor);
       }
-
       shift_left_big(&quotient, 1);
       if (get_bit(partial_reminder.decimal[1], 127) == 0) {
         set_bit(&quotient.decimal[0], 0, 1);
       }
-
       divindend = partial_reminder;
       shift_left_big(&divindend, 1);
       need_sub = (get_bit(partial_reminder.decimal[1], 127) == 0);
       shift--;
     }
-
     if (get_bit(partial_reminder.decimal[1], 127) == 1) {
       partial_reminder = double_decimal_add(partial_reminder, shifted_divisor);
     }
     shift_right_big(&partial_reminder, left_bit_index_1 - left_bit_index_2);
     result = quotient;
   }
-
   if (remainder) {
     *remainder = partial_reminder;
   }
-
   return result;
 }
 

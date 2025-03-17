@@ -1,6 +1,6 @@
 #include "helpers.h"
 
-int is_correct_decimal(s21_decimal value) {
+int is_correct_scale(s21_decimal value) {
   int status = 1;
   int scale = get_scale(value);
   if (scale > 28 || scale < 0) {
