@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "helpers_test.h": "c"
+        "helpers_test.h": "c",
+        "limits.h": "c"
     },
     "CodeGPT.apiKey": "Ollama"
 }

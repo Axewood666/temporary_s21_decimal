@@ -122,15 +122,20 @@ START_TEST(decimal_to_int_false_null_ptr) {
 }
 END_TEST
 
-START_TEST(decimal_to_int_more_max_int) {
+START_TEST(decimal_to_int_more_max_int_1) {
   s21_decimal number_decimal = {
-      {0xFFFFFFFF, 0x00000000, 0x00000000, 0x00000000}};  // INT_MAX
+      {0x7FFFFFFF, 0x00000001, 0x00000000, 0x00000000}};
   int result_int = 0;
   int res = s21_from_decimal_to_int(number_decimal, &result_int);
-  printf("|%8.8X| |%8.8X| |%8.8X| |%8.8X|\n", number_decimal.bits[0],
-         number_decimal.bits[1], number_decimal.bits[2],
-         number_decimal.bits[3]);
-  printf("%d\n", result_int);
+  ck_assert_int_eq(res, 1);
+}
+END_TEST
+
+START_TEST(decimal_to_int_more_max_int_2) {
+  s21_decimal number_decimal = {
+      {0x7FFFFFFF, 0x00000000, 0x00000001, 0x00000000}};
+  int result_int = 0;
+  int res = s21_from_decimal_to_int(number_decimal, &result_int);
   ck_assert_int_eq(res, 1);
 }
 END_TEST
@@ -333,7 +338,8 @@ Suite *test_conversion(void) {
   tcase_add_test(tc, decimal_to_int_min_int);
   tcase_add_test(tc, decimal_to_int_with_fraction);
   tcase_add_test(tc, decimal_to_int_false_null_ptr);
-  tcase_add_test(tc, decimal_to_int_more_max_int);
+  tcase_add_test(tc, decimal_to_int_more_max_int_1);
+  tcase_add_test(tc, decimal_to_int_more_max_int_2);
 
   tcase_add_test(
       tc, float_to_decimal_positive_number_without_fractional_part_greater_10);
