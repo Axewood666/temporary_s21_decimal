@@ -15,16 +15,12 @@ int s21_is_less(s21_decimal first, s21_decimal second) {
 
   if (sign_1 == 1 && sign_2 == 0) {
     return TRUE;
-  }
-
-  if (sign_1 == 0 && sign_2 == 1) {
+  } else if (sign_1 == 0 && sign_2 == 1) {
     return FALSE;
-  }
-
-  if (sign_1 == 1 && sign_2 == 1) {
+  } else if (sign_1 == 1) {
     return s21_is_less_auxiliary_addition(s21_decimal_abs(second),
                                           s21_decimal_abs(first));
+  } else {
+    return s21_is_less_auxiliary_addition(first, second);
   }
-
-  return s21_is_less_auxiliary_addition(first, second);
 }

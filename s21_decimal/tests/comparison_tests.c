@@ -56,9 +56,16 @@ START_TEST(greater_false_different_sign) {
 }
 END_TEST
 
-START_TEST(less_true) {
+START_TEST(less_true_1) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_is_less(num1, num2), 1);
+}
+END_TEST
+
+START_TEST(less_true_2) {
+  s21_decimal num1 = {{0x00000020, 0x00000000, 0x00000000, 0x80000000}};
+  s21_decimal num2 = {{0x00000010, 0x00000000, 0x00000000, 0x80000000}};
   ck_assert_int_eq(s21_is_less(num1, num2), 1);
 }
 END_TEST
@@ -70,10 +77,17 @@ START_TEST(less_false) {
 }
 END_TEST
 
-START_TEST(less_false_different_sign) {
+START_TEST(less_true_different_sign) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x80000000}};
   s21_decimal num2 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   ck_assert_int_eq(s21_is_less(num1, num2), 1);
+}
+END_TEST
+
+START_TEST(less_false_different_sign) {
+  s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000010, 0x00000000, 0x00000000, 0x80000000}};
+  ck_assert_int_eq(s21_is_less(num1, num2), 0);
 }
 END_TEST
 
@@ -98,9 +112,16 @@ START_TEST(greater_or_equal_false_different_sign) {
 }
 END_TEST
 
-START_TEST(less_or_equal_true) {
+START_TEST(less_or_equal_true_1) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_is_less_or_equal(num1, num2), 1);
+}
+END_TEST
+
+START_TEST(less_or_equal_true_2) {
+  s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   ck_assert_int_eq(s21_is_less_or_equal(num1, num2), 1);
 }
 END_TEST
@@ -134,15 +155,18 @@ Suite *test_comparison(void) {
   tcase_add_test(tc, greater_false);
   tcase_add_test(tc, greater_false_different_sign);
 
-  tcase_add_test(tc, less_true);
+  tcase_add_test(tc, less_true_1);
+  tcase_add_test(tc, less_true_2);
   tcase_add_test(tc, less_false);
+  tcase_add_test(tc, less_true_different_sign);
   tcase_add_test(tc, less_false_different_sign);
 
   tcase_add_test(tc, greater_or_equal_true);
   tcase_add_test(tc, greater_or_equal_false);
   tcase_add_test(tc, greater_or_equal_false_different_sign);
 
-  tcase_add_test(tc, less_or_equal_true);
+  tcase_add_test(tc, less_or_equal_true_1);
+  tcase_add_test(tc, less_or_equal_true_2);
   tcase_add_test(tc, less_or_equal_false);
   tcase_add_test(tc, less_or_equal_false_different_sign);
 
