@@ -18,35 +18,14 @@ int auxiliary_mul(s21_decimal value_1, s21_decimal value_2,
     *result = s21_decimal_get_inf();
   } else {
     while (shift > 28) {
-      res = double_decimal_binary_division(
-          res, create_double_decimal_from_decimal(s21_decimal_get_ten()), NULL);
-      shift--;
-    }
-
-    if (res_scale > 28) {
-      double_decimal temp = res;
-      int temp_scale = res_scale;
-      while (temp_scale > 28) {
-        temp = double_decimal_binary_division(
-            temp, create_double_decimal_from_decimal(s21_decimal_get_ten()),
-            NULL);
-        temp_scale--;
-      }
-      shift = res_scale - temp_scale + shift;
-      res_scale = temp_scale;
+      adjust_scale(&res, &shift);
     }
     double_decimal remainder =
         create_double_decimal_from_decimal(create_zero_decimal());
-    double_decimal powerten =
-        create_double_decimal_from_decimal(get_ten_pow(shift));
-    res = double_decimal_binary_division(res, powerten, &remainder);
-    set_scale(&remainder.decimal[0], shift);
+    process_remainder(&res, &remainder, shift);
+    round_result(&res, &remainder, res_scale);
 
-    res.decimal[0] = s21_round_bank(res.decimal[0], remainder.decimal[0]);
-
-    set_scale(&res.decimal[0], res_scale);
-
-    if (!s21_decimal_binary_equal_zero(res.decimal[1])) {
+    if (check_for_overflow(res)) {
       status = ARITHMETIC_BIG;
     } else {
       *result = res.decimal[0];

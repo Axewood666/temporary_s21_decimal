@@ -62,6 +62,30 @@ s21_decimal s21_decimal_abs(s21_decimal value) {
   return res;
 }
 
+void adjust_scale(double_decimal *res, int *shift) {
+  *res = double_decimal_binary_division(
+      *res, create_double_decimal_from_decimal(s21_decimal_get_ten()), NULL);
+  (*shift)--;
+}
+
+void process_remainder(double_decimal *res, double_decimal *remainder,
+                       int shift) {
+  double_decimal powerten =
+      create_double_decimal_from_decimal(get_ten_pow(shift));
+  *res = double_decimal_binary_division(*res, powerten, remainder);
+  set_scale(&remainder->decimal[0], shift);
+}
+
+void round_result(double_decimal *res, double_decimal *remainder,
+                  int res_scale) {
+  res->decimal[0] = s21_round_bank(res->decimal[0], remainder->decimal[0]);
+  set_scale(&res->decimal[0], res_scale);
+}
+
+int check_for_overflow(double_decimal res) {
+  return !s21_decimal_binary_equal_zero(res.decimal[1]);
+}
+
 s21_decimal mul_by_ten(s21_decimal value) {
   s21_decimal temp_1 = value;
   s21_decimal temp_2 = value;

@@ -35,6 +35,36 @@ int auxiliary_sub(s21_decimal value_1, s21_decimal value_2,
   return status;
 }
 
+int subtract_decimals_with_signs(s21_decimal value_1, s21_decimal value_2,
+                                 int sign_1, int sign_2, s21_decimal *res) {
+  int status = ARITHMETIC_OK;
+
+  if (sign_1 == 0 && sign_2 == 0) {
+    if (s21_is_greater_or_equal(value_1, value_2)) {
+      status = auxiliary_sub(value_1, value_2, res);
+    } else {
+      status = auxiliary_sub(value_2, value_1, res);
+      s21_negate(*res, res);
+    }
+  } else if (sign_1 == 0 && sign_2 == 1) {
+    status = s21_add(value_1, s21_decimal_abs(value_2), res);
+  } else if (sign_1 == 1 && sign_2 == 0) {
+    status = s21_add(s21_decimal_abs(value_1), value_2, res);
+    s21_negate(*res, res);
+  } else if (sign_1 == 1 && sign_2 == 1) {
+    if (s21_is_greater_or_equal(value_1, value_2)) {
+      status = auxiliary_sub(s21_decimal_abs(value_2), s21_decimal_abs(value_1),
+                             res);
+    } else {
+      status = auxiliary_sub(s21_decimal_abs(value_1), s21_decimal_abs(value_2),
+                             res);
+      s21_negate(*res, res);
+    }
+  }
+
+  return status;
+}
+
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int status = ARITHMETIC_OK;
   if (!result || !is_correct_scale(value_1) || !is_correct_scale(value_2)) {
@@ -45,28 +75,8 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int sign_1 = get_sign(value_1);
     int sign_2 = get_sign(value_2);
 
-    if (sign_1 == 0 && sign_2 == 0) {
-      if (s21_is_greater_or_equal(value_1, value_2)) {
-        status = auxiliary_sub(value_1, value_2, &res);
-      } else {
-        status = auxiliary_sub(value_2, value_1, &res);
-        s21_negate(res, &res);
-      }
-    } else if (sign_1 == 0 && sign_2 == 1) {
-      status = s21_add(value_1, s21_decimal_abs(value_2), &res);
-    } else if (sign_1 == 1 && sign_2 == 0) {
-      status = s21_add(s21_decimal_abs(value_1), value_2, &res);
-      s21_negate(res, &res);
-    } else if (sign_1 == 1 && sign_2 == 1) {
-      if (s21_is_greater_or_equal(value_1, value_2)) {
-        status = auxiliary_sub(s21_decimal_abs(value_2),
-                               s21_decimal_abs(value_1), &res);
-      } else {
-        status = auxiliary_sub(s21_decimal_abs(value_1),
-                               s21_decimal_abs(value_2), &res);
-        s21_negate(res, &res);
-      }
-    }
+    status =
+        subtract_decimals_with_signs(value_1, value_2, sign_1, sign_2, &res);
 
     if (get_sign(res) == 1 && status == ARITHMETIC_BIG) {
       status = ARITHMETIC_SMALL;

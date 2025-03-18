@@ -445,7 +445,7 @@ START_TEST(div_by_zero) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
-  ck_assert_int_eq(s21_div(num1, num2, &res), 3);  // Ожидаем ошибку
+  ck_assert_int_eq(s21_div(num1, num2, &res), 3);
 }
 END_TEST
 START_TEST(div_not_int_both_positive) {

@@ -61,4 +61,11 @@ int zero_or_one_insertion(s21_decimal *value_1, s21_decimal *value_2,
 int div_int(s21_decimal *value_1, s21_decimal *value_2, s21_decimal *Q);
 int getFloatExp(float *value);
 int s21_is_empty_mant(s21_decimal value);
+void adjust_scale(double_decimal *res, int *shift);
+void process_remainder(double_decimal *res, double_decimal *remainder,
+                       int shift);
+void round_result(double_decimal *res, double_decimal *remainder,
+                  int res_scale);
+int check_for_overflow(double_decimal res);
+
 #endif
