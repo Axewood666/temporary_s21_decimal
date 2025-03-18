@@ -41,11 +41,6 @@ void adjust_decimal_scale(s21_decimal *result, int *scale) {
       s21_mul(*result, ten, result);
     }
     *scale = 0;
-  } else if (*scale > 28) {
-    for (int i = 0; i < *scale - 28; i++) {
-      s21_div(*result, ten, result);
-    }
-    *scale = 28;
   }
 }
 

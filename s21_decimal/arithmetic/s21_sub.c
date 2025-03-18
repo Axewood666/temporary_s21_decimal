@@ -46,11 +46,6 @@ int subtract_decimals_with_signs(s21_decimal value_1, s21_decimal value_2,
       status = auxiliary_sub(value_2, value_1, res);
       s21_negate(*res, res);
     }
-  } else if (sign_1 == 0 && sign_2 == 1) {
-    status = s21_add(value_1, s21_decimal_abs(value_2), res);
-  } else if (sign_1 == 1 && sign_2 == 0) {
-    status = s21_add(s21_decimal_abs(value_1), value_2, res);
-    s21_negate(*res, res);
   } else if (sign_1 == 1 && sign_2 == 1) {
     if (s21_is_greater_or_equal(value_1, value_2)) {
       status = auxiliary_sub(s21_decimal_abs(value_2), s21_decimal_abs(value_1),
@@ -60,6 +55,11 @@ int subtract_decimals_with_signs(s21_decimal value_1, s21_decimal value_2,
                              res);
       s21_negate(*res, res);
     }
+  } else if (sign_1 == 0) {
+    status = s21_add(value_1, s21_decimal_abs(value_2), res);
+  } else if (sign_1 == 1) {
+    status = s21_add(s21_decimal_abs(value_1), value_2, res);
+    s21_negate(*res, res);
   }
 
   return status;

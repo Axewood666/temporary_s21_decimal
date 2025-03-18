@@ -55,6 +55,12 @@ START_TEST(int_to_decimal_min_int) {
 }
 END_TEST
 
+START_TEST(int_to_decimal_dst_null) {
+  int number_int = -2147483647;
+  ck_assert_int_eq(s21_from_int_to_decimal(number_int, NULL), 1);
+}
+END_TEST
+
 START_TEST(decimal_to_int_zero) {
   s21_decimal number_decimal = {
       {0x00000000, 0x00000000, 0x00000000, 0x00000000}};
@@ -249,6 +255,22 @@ START_TEST(float_to_decimal_zero) {
 }
 END_TEST
 
+START_TEST(float_to_decimal_scr_isnan) {
+  s21_decimal number_decimal = {
+      {0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  float number_float = 0;
+  ck_assert_int_eq(s21_from_float_to_decimal(NAN, &number_decimal), 1);
+}
+END_TEST
+
+START_TEST(float_to_decimal_scr_isinf) {
+  s21_decimal number_decimal = {
+      {0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  float number_float = 0;
+  ck_assert_int_eq(s21_from_float_to_decimal(INFINITY, &number_decimal), 1);
+}
+END_TEST
+
 START_TEST(decimal_to_float_positive_number_without_fractional_part) {
   s21_decimal number_decimal = {
       {0x0001E240, 0x00000000, 0x00000000, 0x00000000}};
@@ -330,6 +352,7 @@ Suite *test_conversion(void) {
   tcase_add_test(tc, int_to_decimal_negative);
   tcase_add_test(tc, int_to_decimal_max_int);
   tcase_add_test(tc, int_to_decimal_min_int);
+  tcase_add_test(tc, int_to_decimal_dst_null);
 
   tcase_add_test(tc, decimal_to_int_zero);
   tcase_add_test(tc, decimal_to_int_positive);
@@ -361,6 +384,8 @@ Suite *test_conversion(void) {
       float_to_decimal_negative_number_with_fractional_part_greater_10_round);
   tcase_add_test(tc, float_to_decimal_error_dst_null);
   tcase_add_test(tc, float_to_decimal_zero);
+  tcase_add_test(tc, float_to_decimal_scr_isnan);
+  tcase_add_test(tc, float_to_decimal_scr_isinf);
 
   tcase_add_test(tc, decimal_to_float_positive_number_without_fractional_part);
   tcase_add_test(tc, decimal_to_float_negative_number_without_fractional_part);

@@ -277,7 +277,36 @@ START_TEST(sub_too_small) {
   ck_assert_int_eq(s21_sub(num1, num2, &res), 2);
 }
 END_TEST
-//=========================================================================
+
+START_TEST(sub_null_ptr) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_sub(num1, num2, NULL), 4);
+}
+END_TEST
+
+START_TEST(sub_big_scale_1) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x00520000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_sub(num1, num2, NULL), 4);
+}
+END_TEST
+
+START_TEST(sub_big_scale_2) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00520000}};
+  ck_assert_int_eq(s21_sub(num1, num2, NULL), 4);
+}
+END_TEST
+
+START_TEST(sub_big_false_arif_big) {
+  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}};
+  s21_decimal num2 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_sub(num1, num2, &res), 1);
+}
+END_TEST
+
 START_TEST(mul_int_both_positive) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal num2 = {{0x00000020, 0x00000000, 0x00000000, 0x00000000}};
@@ -441,6 +470,7 @@ START_TEST(div_int_both_negative_with_not_int_result) {
   comparison(res1, res2);
 }
 END_TEST
+
 START_TEST(div_by_zero) {
   s21_decimal num1 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal num2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
@@ -448,6 +478,17 @@ START_TEST(div_by_zero) {
   ck_assert_int_eq(s21_div(num1, num2, &res), 3);
 }
 END_TEST
+
+START_TEST(div_zero_by_number) {
+  s21_decimal num1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal num2 = {{0x00000010, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal res2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 0);
+  comparison(res1, res2);
+}
+END_TEST
+
 START_TEST(div_not_int_both_positive) {
   s21_decimal num1 = {
       {0x00000112, 0x00000000, 0x00000000, 0x00020000}};  // 10.000
@@ -497,6 +538,22 @@ START_TEST(div_second_not_correct) {
 }
 END_TEST
 
+START_TEST(div_int_arif_big) {
+  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}};
+  s21_decimal num2 = {{0x00000002, 0x00000000, 0x00000000, 0x001C0000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 1);
+}
+END_TEST
+
+START_TEST(div_int_arif_small) {
+  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
+  s21_decimal num2 = {{0x00000002, 0x00000000, 0x00000000, 0x001C0000}};
+  s21_decimal res1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_div(num1, num2, &res1), 2);
+}
+END_TEST
+
 Suite *test_arithmetic(void) {
   Suite *s = suite_create("Arithmetic test");
   TCase *tc = tcase_create("Tests");
@@ -531,6 +588,10 @@ Suite *test_arithmetic(void) {
   tcase_add_test(tc, sub_int_equals);
   tcase_add_test(tc, sub_too_large);
   tcase_add_test(tc, sub_too_small);
+  tcase_add_test(tc, sub_null_ptr);
+  tcase_add_test(tc, sub_big_scale_1);
+  tcase_add_test(tc, sub_big_scale_2);
+  tcase_add_test(tc, sub_big_false_arif_big);
 
   tcase_add_test(tc, mul_int_both_positive);
   tcase_add_test(tc, mul_int_both_negative);
@@ -550,11 +611,14 @@ Suite *test_arithmetic(void) {
   tcase_add_test(tc, div_int_both_positive_with_not_int_result);
   tcase_add_test(tc, div_int_both_negative_with_not_int_result);
   tcase_add_test(tc, div_by_zero);
+  tcase_add_test(tc, div_zero_by_number);
   tcase_add_test(tc, div_not_int_both_positive);
   tcase_add_test(tc, div_not_int_one_positive);
   tcase_add_test(tc, div_null_decimal);
   tcase_add_test(tc, div_first_not_correct);
   tcase_add_test(tc, div_second_not_correct);
+  tcase_add_test(tc, div_int_arif_big);
+  tcase_add_test(tc, div_int_arif_small);
 
   suite_add_tcase(s, tc);
   return s;
