@@ -17,19 +17,11 @@ int auxiliary_mul(s21_decimal value_1, s21_decimal value_2,
     status = ARITHMETIC_BIG;
     *result = s21_decimal_get_inf();
   } else {
-    while (shift > 28) {
-      adjust_scale(&res, &shift);
-    }
     double_decimal remainder =
         create_double_decimal_from_decimal(create_zero_decimal());
     process_remainder(&res, &remainder, shift);
     round_result(&res, &remainder, res_scale);
-
-    if (check_for_overflow(res)) {
-      status = ARITHMETIC_BIG;
-    } else {
-      *result = res.decimal[0];
-    }
+    *result = res.decimal[0];
   }
 
   return status;

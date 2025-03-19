@@ -17,11 +17,11 @@ int auxiliary_addition(s21_decimal value_1, s21_decimal value_2,
     status = ARITHMETIC_BIG;
     *result = s21_decimal_get_inf();
   } else {
-    while (shift > 28) {
-      res = double_decimal_binary_division(
-          res, create_double_decimal_from_decimal(s21_decimal_get_ten()), NULL);
-      shift--;
-    }
+    // while (shift > 28) {
+    //   res = double_decimal_binary_division(
+    //       res, create_double_decimal_from_decimal(s21_decimal_get_ten()), NULL);
+    //   shift--;
+    // }
 
     double_decimal remainder =
         create_double_decimal_from_decimal(create_zero_decimal());
@@ -33,11 +33,12 @@ int auxiliary_addition(s21_decimal value_1, s21_decimal value_2,
     res.decimal[0] = s21_round_bank(res.decimal[0], remainder.decimal[0]);
     set_scale(&res.decimal[0], res_scale);
 
-    if (!s21_decimal_binary_equal_zero(res.decimal[1])) {
-      status = ARITHMETIC_BIG;
-    } else {
-      *result = res.decimal[0];
-    }
+    // if (!s21_decimal_binary_equal_zero(res.decimal[1])) {
+    //   status = ARITHMETIC_BIG;
+    // } else {
+      
+    // }
+    *result = res.decimal[0];
   }
   return status;
 }
