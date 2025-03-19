@@ -2,9 +2,9 @@
 
 void align_scales(s21_decimal value_1, s21_decimal value_2,
                   double_decimal *value_1d, double_decimal *value_2d) {
-  if (!value_1d || !value_2d) {
-    return;
-  }
+  // if (!value_1d || !value_2d) {
+  //   return;
+  // }
 
   int scale_1 = get_scale(value_1);
   int scale_2 = get_scale(value_2);

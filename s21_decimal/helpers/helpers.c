@@ -386,24 +386,24 @@ int div_int(s21_decimal *value_1, s21_decimal *value_2, s21_decimal *Q) {
   return status;
 }
 
-int get_first_digit_after_decimal(s21_decimal value) {
-  int first_digit = 0;
-  int scale = get_scale(value);
-  int sign = get_sign(value);
+// int get_first_digit_after_decimal(s21_decimal value) {
+//   int first_digit = 0;
+//   int scale = get_scale(value);
+//   int sign = get_sign(value);
 
-  if (sign) {
-    s21_negate(value, &value);
-  }
-  if (scale > 0) {
-    s21_decimal temp = value;
-    set_scale(&temp, 0);
-    s21_decimal ten = get_ten_pow(scale - 1);
-    s21_decimal result = {{0, 0, 0, 0}};
-    div_int(&temp, &ten, &result);
-    first_digit = result.bits[0] % 10;
-  }
-  return first_digit;
-}
+//   if (sign) {
+//     s21_negate(value, &value);
+//   }
+//   if (scale > 0) {
+//     s21_decimal temp = value;
+//     set_scale(&temp, 0);
+//     s21_decimal ten = get_ten_pow(scale - 1);
+//     s21_decimal result = {{0, 0, 0, 0}};
+//     div_int(&temp, &ten, &result);
+//     first_digit = result.bits[0] % 10;
+//   }
+//   return first_digit;
+// }
 
 s21_decimal s21_decimal_get_inf() {
   s21_decimal result = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x7FFFFFFF}};

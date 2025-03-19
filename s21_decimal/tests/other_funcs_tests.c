@@ -146,6 +146,18 @@ START_TEST(test_round_4) {
 }
 END_TEST
 
+
+START_TEST(round_bank_test) {
+  s21_decimal number_decimal_1 = 
+    {{0x5, 0x0, 0x0, 0x00010000}};
+  s21_decimal number_decimal_2 = 
+    {{0x5, 0x0, 0x0, 0x00010000}};
+  s21_round_bank(number_decimal_1, number_decimal_2);
+}
+
+END_TEST
+
+
 Suite *test_other_funcs(void) {
   Suite *s = suite_create("Other funcs test");
   TCase *tc = tcase_create("Tests");
@@ -168,6 +180,8 @@ Suite *test_other_funcs(void) {
   tcase_add_test(tc, test_round_2);
   tcase_add_test(tc, test_round_3);
   tcase_add_test(tc, test_round_4);
+
+  tcase_add_test(tc, round_bank_test);
 
   suite_add_tcase(s, tc);
   return s;

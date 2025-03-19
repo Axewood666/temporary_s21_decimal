@@ -428,6 +428,14 @@ END_TEST
 START_TEST(mul_ret_null_1) {
   s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00ff0000}};
   s21_decimal num2 = {{0x17FFFFFF, 0x602F7FC3, 0xFCC4D1C3, 0x00ff0000}};
+  s21_decimal res = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  ck_assert_int_eq(s21_mul(num1, num2, &res), 4);
+}
+END_TEST
+
+START_TEST(mul_ret_null_2) {
+  s21_decimal num1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00ff0000}};
+  s21_decimal num2 = {{0x17FFFFFF, 0x602F7FC3, 0xFCC4D1C3, 0x00010000}};
   ck_assert_int_eq(s21_mul(num1, num2, NULL), 4);
 }
 END_TEST
@@ -627,6 +635,7 @@ Suite *test_arithmetic(void) {
   tcase_add_test(tc, mul_ret_overflow);
   tcase_add_test(tc, mul_ret_null);
   tcase_add_test(tc, mul_ret_null_1);
+  tcase_add_test(tc, mul_ret_null_2);
 
   tcase_add_test(tc, div_int_both_positive);
   tcase_add_test(tc, div_int_both_negative);
